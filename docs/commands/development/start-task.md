@@ -90,8 +90,8 @@ Begin development on a task with proper setup and pre-flight checks.
 
 ## Used By
 
-- **[IC Engineer](../../roles/engineer.md#daily-commands)** - Every task (primary)
-- **[Senior Engineer](../../roles/engineer.md#senior-engineer)** - Complex features
+- **[IC Engineer](../../roles/engineer.md)** - Every task (primary)
+- **[Senior Engineer](../../roles/engineer.md)** - Complex features
 - **[QA Engineer](../../roles/qa.md)** - Test automation work
 
 ---

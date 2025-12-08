@@ -99,7 +99,7 @@ Generate tests for component interactions and integrations.
 ## Used By
 
 - **[All Engineers](../../roles/engineer.md)** - Complex features
-- **[Senior Engineer](../../roles/engineer.md#senior-engineer)** - System integration
+- **[Senior Engineer](../../roles/engineer.md)** - System integration
 - **[QA Engineer](../../roles/qa.md)** - Primary
 
 ---

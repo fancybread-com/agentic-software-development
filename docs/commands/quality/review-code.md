@@ -106,8 +106,8 @@ AI-assisted code review analyzing quality, security, and best practices.
 
 ## Used By
 
-- **[Senior Engineer](../../roles/engineer.md#senior-engineer)** - Daily reviews
-- **[Staff Engineer](../../roles/engineer.md#staff-engineer)** - Architecture review
+- **[Senior Engineer](../../roles/engineer.md)** - Daily reviews
+- **[Staff Engineer](../../roles/engineer.md)** - Architecture review
 
 ---
 
