@@ -1,0 +1,173 @@
+site_name: Agentic Software Development
+site_description: Development methodology for Cursor IDE + Jira + GitHub with AI workflow automation
+site_author: Paul
+site_url: https://github.com/fancybread-com/agentic-software-development
+
+repo_name: agentic-software-development
+repo_url: https://github.com/fancybread-com/agentic-software-development
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+
+  # Color scheme - Try different combinations by changing primary/accent:
+  # Options: red, pink, purple, deep purple, indigo, blue, light blue, cyan,
+  #          teal, green, light green, lime, yellow, amber, orange, deep orange,
+  #          brown, grey, blue grey
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: grey          # Change this to try: teal, blue grey, deep purple, green
+      accent: deep purple          # Change this to try: amber, deep orange, light green
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: grey          # Keep same as light mode
+      accent: deep purple          # Keep same as light mode
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+  features:
+    # Navigation
+    - navigation.instant       # Instant loading
+    - navigation.tracking      # Anchor tracking
+    - navigation.tabs          # Top-level tabs
+    - navigation.tabs.sticky   # Sticky tabs
+    - navigation.sections      # Sections in sidebar
+    - navigation.expand        # Expand all sections by default
+    - navigation.indexes       # Section index pages
+    - navigation.top           # Back to top button
+    - navigation.footer        # Previous/next footer
+
+    # Search
+    - search.suggest           # Search suggestions
+    - search.highlight         # Highlight search results
+    - search.share            # Share search results
+
+    # Table of contents
+    - toc.follow              # TOC follows scroll
+    - toc.integrate           # Integrate TOC into nav
+
+    # Content
+    - content.code.copy       # Copy button for code blocks
+    - content.code.annotate   # Code annotations
+    - content.tabs.link       # Link tabs across pages
+    - content.tooltips        # Improved tooltips
+
+# Navigation structure
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+
+  - Commands:
+    - commands/index.md
+    - By Role: commands/by-role.md
+    - Quick Reference: commands/quick-reference.md
+    - Product:
+      - Create Story: commands/product/create-story.md
+      - Create Epic: commands/product/create-epic.md
+    - Development:
+      - Create Task Plan: commands/development/create-task-plan.md
+      - Start Task: commands/development/start-task.md
+      - Verify Task: commands/development/verify-task.md
+      - Complete Task: commands/development/complete-task.md
+      - Sync Task: commands/development/sync-task.md
+    - Quality:
+      - Create Unit Tests: commands/quality/create-unit-tests.md
+      - Create Integration Tests: commands/quality/create-integration-tests.md
+      - Create E2E Tests: commands/quality/create-e2e-tests.md
+      - Review Code: commands/quality/review-code.md
+
+  - Roles:
+    - roles/index.md
+    - Product Manager: roles/product-manager.md
+    - Software Engineer: roles/engineer.md
+    - QA: roles/qa.md
+
+# Plugins
+plugins:
+  - search:
+      lang: en
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+
+  - tags:
+      tags_file: tags.md
+
+  # - git-revision-date-localized:  # Uncomment to show last updated dates
+  #     enable_creation_date: true
+  #     type: timeago
+
+# Markdown extensions
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      permalink_title: Anchor link to this section
+      toc_depth: 3
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Additional configuration
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/fancybread-com/agentic-software-development
+      name: GitHub Repository
+
+# Copyright
+copyright: Copyright &copy; 2024
+
+# Extra CSS/JS (optional)
+extra_css:
+  - stylesheets/extra.css
+
+# extra_javascript:
+#   - javascripts/extra.js
+

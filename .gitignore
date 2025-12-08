@@ -1,0 +1,47 @@
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE/Editor Files
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# Temporary Files
+*.tmp
+*.bak
+*.log
+
+# Personal Notes (optional)
+NOTES.md
+TODO.md
+scratch/
+
+# Node modules (if tooling is added later)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Python (MkDocs)
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+*.egg-info/
+
+# MkDocs
+site/
+mkdocs.log
+.mkdocs.pid
+
