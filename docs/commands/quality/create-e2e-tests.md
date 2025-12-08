@@ -102,7 +102,7 @@ Generate end-to-end tests for complete user journeys.
 ## Used By
 
 - **[QA Engineer](../../roles/qa.md)** - Primary (daily)
-- **[Senior Engineer](../../roles/engineer.md#senior-engineer)** - Critical paths
+- **[Senior Engineer](../../roles/engineer.md)** - Critical paths
 
 ---
 

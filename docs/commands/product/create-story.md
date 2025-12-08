@@ -89,7 +89,7 @@ Create a new story in the issue tracker from a feature request or requirement.
 ## Used By
 
 - **[Product Manager](../../roles/product-manager.md)** - Primary (daily)
-- **[Staff Engineer](../../roles/engineer.md#staff-engineer)** - Technical initiatives
+- **[Staff Engineer](../../roles/engineer.md)** - Technical initiatives
 
 ---
 

@@ -94,14 +94,15 @@ nav:
     - Software Engineer: roles/engineer.md
     - QA: roles/qa.md
 
+  - Reference:
+    - MCP Setup: implementations/cursor/mcp-setup.md
+    - Command Files: implementations/cursor/commands/README.md
+
 # Plugins
 plugins:
   - search:
       lang: en
       separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
-
-  - tags:
-      tags_file: tags.md
 
   # - git-revision-date-localized:  # Uncomment to show last updated dates
   #     enable_creation_date: true

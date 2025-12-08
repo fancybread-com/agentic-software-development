@@ -92,8 +92,8 @@ Commit changes, push to remote, create pull request, and transition issue to "Co
 
 ## Used By
 
-- **[IC Engineer](../../roles/engineer.md#daily-commands)** - Every task (primary)
-- **[Senior Engineer](../../roles/engineer.md#senior-engineer)** - Every task
+- **[IC Engineer](../../roles/engineer.md)** - Every task (primary)
+- **[Senior Engineer](../../roles/engineer.md)** - Every task
 - **[QA Engineer](../../roles/qa.md)** - Test automation
 
 ---

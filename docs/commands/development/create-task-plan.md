@@ -98,9 +98,9 @@ Create a detailed technical implementation plan for a story.
 
 ## Used By
 
-- **[IC Engineer](../../roles/engineer.md#daily-commands)** - Every story
-- **[Senior Engineer](../../roles/engineer.md#senior-engineer)** - Complex features
-- **[Staff Engineer](../../roles/engineer.md#staff-engineer)** - System design
+- **[IC Engineer](../../roles/engineer.md)** - Every story
+- **[Senior Engineer](../../roles/engineer.md)** - Complex features
+- **[Staff Engineer](../../roles/engineer.md)** - System design
 
 ---
 

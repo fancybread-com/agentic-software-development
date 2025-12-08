@@ -91,7 +91,7 @@ Create an epic and its child stories from a plan document.
 ## Used By
 
 - **[Product Manager](../../roles/product-manager.md)** - Major initiatives
-- **[Staff Engineer](../../roles/engineer.md#staff-engineer)** - Technical initiatives
+- **[Staff Engineer](../../roles/engineer.md)** - Technical initiatives
 
 ---
 

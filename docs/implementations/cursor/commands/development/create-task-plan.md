@@ -98,9 +98,7 @@ Create a detailed technical implementation plan for a story.
 
 ## Used By
 
-- **[IC Engineer](../../../roles/engineer.md#ic-engineer)** - Every story
-- **[Senior Engineer](../../../roles/engineer.md#senior-engineer)** - Complex features
-- **[Staff Engineer](../../../roles/engineer.md#staff-engineer)** - System design
+- **[Software Engineers](../../../../roles/engineer.md)** - Every story
 
 ---
 
@@ -111,5 +109,5 @@ Create a detailed technical implementation plan for a story.
 
 ---
 
-[:octicons-arrow-left-24: Back to Commands](../../../commands/index.md)
+[:octicons-arrow-left-24: Back to Commands](../../../../commands/index.md)
 

@@ -38,7 +38,7 @@ Find commands relevant to your role.
 - [`/sync-task`](development/sync-task.md) - Update after merge
 - [`/create-integration-tests`](quality/create-integration-tests.md) - Integration coverage
 
-[View role guide →](../roles/engineer.md#ic-engineer)
+[View role guide →](../roles/engineer.md)
 
 ---
 
@@ -55,7 +55,7 @@ Find commands relevant to your role.
 **Occasional:**
 - [`/create-e2e-tests`](quality/create-e2e-tests.md) - Critical path testing
 
-[View role guide →](../roles/engineer.md#senior-engineer)
+[View role guide →](../roles/engineer.md)
 
 ---
 
@@ -71,7 +71,7 @@ Find commands relevant to your role.
 - Cross-team coordination using most commands
 - Architecture and standards work
 
-[View role guide →](../roles/engineer.md#staff-engineer)
+[View role guide →](../roles/engineer.md)
 
 ---
 
