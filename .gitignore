@@ -45,3 +45,5 @@ site/
 mkdocs.log
 .mkdocs.pid
 
+# Plans
+.plans/

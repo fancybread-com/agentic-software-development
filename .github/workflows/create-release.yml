@@ -1,0 +1,91 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Matches v1.0.0, v1.0.1, v2.0.0, etc.
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for changelog
+
+      - name: Extract version from tag
+        id: tag
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "version=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Release version: $TAG_NAME"
+
+      - name: Generate release notes from CHANGELOG
+        id: changelog
+        run: |
+          CHANGELOG_FILE="implementations/cursor/commands/CHANGELOG.md"
+          VERSION=${GITHUB_REF#refs/tags/v}
+
+          if [ -f "$CHANGELOG_FILE" ]; then
+            # Extract the section for this version from CHANGELOG.md
+            # Looks for heading like "## [1.0.0]" or "## [v1.0.0]"
+            # Stops at next version heading or end of file
+            SECTION=$(awk -v version="$VERSION" '
+              /^## \[/ && found { exit }
+              /^## \[.*version.*\]/ { found=1 }
+              found { print }
+            ' "$CHANGELOG_FILE")
+
+            if [ -n "$SECTION" ]; then
+              echo "notes<<EOF" >> $GITHUB_OUTPUT
+              echo "$SECTION" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+            else
+              # Fallback: use tag message or default
+              echo "notes=Release $VERSION - See CHANGELOG.md for details" >> $GITHUB_OUTPUT
+            fi
+          else
+            # No changelog, use tag message or default
+            TAG_MESSAGE=$(git tag -l --format='%(contents)' "${GITHUB_REF#refs/tags/}" 2>/dev/null || echo "")
+            if [ -n "$TAG_MESSAGE" ]; then
+              echo "notes=$TAG_MESSAGE" >> $GITHUB_OUTPUT
+            else
+              echo "notes=Release ${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Create implementations archives
+        id: archive
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          TAR_NAME="commands-${TAG_NAME}.tar.gz"
+          ZIP_NAME="commands-${TAG_NAME}.zip"
+
+          # Create tar.gz archive with contents of implementations folder (not the folder itself)
+          tar -czf "$TAR_NAME" -C implementations .
+
+          # Create zip archive with contents of implementations folder (not the folder itself)
+          cd implementations
+          zip -r "../$ZIP_NAME" .
+          cd ..
+
+          echo "tar_name=$TAR_NAME" >> $GITHUB_OUTPUT
+          echo "zip_name=$ZIP_NAME" >> $GITHUB_OUTPUT
+          echo "Created archives: $TAR_NAME and $ZIP_NAME"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.notes }}
+          files: ${{ steps.archive.outputs.tar_name }} ${{ steps.archive.outputs.zip_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
