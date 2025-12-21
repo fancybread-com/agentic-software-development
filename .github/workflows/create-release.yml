@@ -1,0 +1,71 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Matches v1.0.0, v1.0.1, v2.0.0, etc.
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for changelog
+
+      - name: Extract version from tag
+        id: tag
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "version=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Release version: $TAG_NAME"
+
+      - name: Generate release notes from CHANGELOG
+        id: changelog
+        run: |
+          CHANGELOG_FILE="implementations/cursor/commands/CHANGELOG.md"
+          VERSION=${GITHUB_REF#refs/tags/v}
+
+          if [ -f "$CHANGELOG_FILE" ]; then
+            # Extract the section for this version from CHANGELOG.md
+            # Looks for heading like "## [1.0.0]" or "## [v1.0.0]"
+            # Stops at next version heading or end of file
+            SECTION=$(awk -v version="$VERSION" '
+              /^## \[/ && found { exit }
+              /^## \[.*version.*\]/ { found=1 }
+              found { print }
+            ' "$CHANGELOG_FILE")
+
+            if [ -n "$SECTION" ]; then
+              echo "notes<<EOF" >> $GITHUB_OUTPUT
+              echo "$SECTION" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+            else
+              # Fallback: use tag message or default
+              echo "notes=Release $VERSION - See CHANGELOG.md for details" >> $GITHUB_OUTPUT
+            fi
+          else
+            # No changelog, use tag message or default
+            TAG_MESSAGE=$(git tag -l --format='%(contents)' "${GITHUB_REF#refs/tags/}" 2>/dev/null || echo "")
+            if [ -n "$TAG_MESSAGE" ]; then
+              echo "notes=$TAG_MESSAGE" >> $GITHUB_OUTPUT
+            else
+              echo "notes=Release ${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.notes }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

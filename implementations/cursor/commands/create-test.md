@@ -10,11 +10,11 @@ Generate unit tests for code components. The command adapts to backend or fronte
   - File path (e.g., `auth-utils.ts`, `src/services/payment.ts`)
   - Component name (e.g., `LoginForm`, `UserDashboard`)
 - **Test Type**: Type of test to generate (unit, integration, e2e). Currently focuses on unit tests.
-- **Test Framework**: Testing library in use (Jest, Vitest, pytest, unittest, Mocha, etc.)
+- **Test Framework**: Testing library in use (Jest, Vitest, pytest, unittest, Mocha, xUnit, NUnit, MSTest, etc.)
 - **Codebase Type**: Classification of codebase structure:
   - **Backend**: API routes, services, models, utilities (typically Node.js, Python, Java, etc.)
   - **Frontend**: Components, hooks, utilities (typically React, Vue, Angular, etc.)
-- **Test File Naming Convention**: Pattern for test file names (e.g., `*.test.ts`, `*_test.py`, `*.spec.js`)
+- **Test File Naming Convention**: Pattern for test file names (e.g., `*.test.ts`, `*_test.py`, `*.spec.js`, `*Test.cs`, `*Tests.cs`)
 - **Arrange-Act-Assert (AAA) Pattern**: Test structure: Arrange (setup), Act (execute), Assert (verify)
 
 ## Prerequisites
@@ -32,8 +32,9 @@ Before proceeding, verify:
    - **If codebase structure is unclear, STOP and ask user for clarification on project structure.**
 
 3. **Test Framework is Identifiable**: Verify test framework can be detected
-   - Check for test framework configuration files (e.g., `jest.config.js`, `vitest.config.ts`, `pytest.ini`)
+   - Check for test framework configuration files (e.g., `jest.config.js`, `vitest.config.ts`, `pytest.ini`, `.csproj`, `.sln`)
    - Look for existing test files to identify framework and naming patterns
+   - For .NET projects, check for `.csproj` files with test framework references (xUnit, NUnit, MSTest)
    - **If test framework cannot be determined, STOP and report: "Unable to identify test framework. Please specify test framework or add configuration file."**
 
 ## Steps
@@ -42,15 +43,16 @@ Before proceeding, verify:
    - **Analyze project structure:**
      - Use `list_dir` to explore root directory structure
      - Look for patterns indicating backend (e.g., `src/routes/`, `src/services/`, `src/models/`)
-     - Look for patterns indicating frontend (e.g., `src/components/`, `src/hooks/`, `src/pages/`)
+     - Look for patterns indicating frontend (e.g., `src/components/`, `src/hooks/`, `src/composables/`, `src/pages/`, `.vue` files, `.tsx`/`.jsx` files)
      - Check for package.json, requirements.txt, or other dependency files to identify language/framework
    - **Identify if backend or frontend:**
      - Backend indicators: API routes, database models, service layers, server configuration
-     - Frontend indicators: UI components, hooks, pages, client-side routing
+     - Frontend indicators: UI components, hooks/composables, pages, client-side routing, `.vue` files (Vue), `.tsx`/`.jsx` files (React)
      - If both present, determine primary focus based on component location
    - **Determine test framework in use:**
-     - Use `glob_file_search` to find test configuration files: `**/jest.config.*`, `**/vitest.config.*`, `**/pytest.ini`, etc.
-     - Use `glob_file_search` to find existing test files: `**/*.test.*`, `**/*_test.*`, `**/*.spec.*`
+     - Use `glob_file_search` to find test configuration files: `**/jest.config.*`, `**/vitest.config.*`, `**/pytest.ini`, `**/*.csproj`, `**/*.sln`, etc.
+     - Use `glob_file_search` to find existing test files: `**/*.test.*`, `**/*_test.*`, `**/*.spec.*`, `**/*Test.cs`, `**/*Tests.cs`
+     - For .NET projects, check `.csproj` files for test framework packages (xUnit, NUnit, MSTest)
      - Read configuration files if found to understand framework setup
      - Identify naming convention from existing test files
    - **Check existing test patterns and conventions:**
@@ -109,8 +111,8 @@ Before proceeding, verify:
 
 4. **Generate test code**
    - **Use project's test framework:**
-     - Follow framework-specific syntax (describe/it for Jest, test() for Vitest, def test_ for pytest)
-     - Use appropriate assertion library (expect, assert, etc.)
+     - Follow framework-specific syntax (describe/it for Jest, test() for Vitest, def test_ for pytest, [Fact] or [Theory] for xUnit, [Test] for NUnit)
+     - Use appropriate assertion library (expect, assert, Assert.Equal, etc.)
    - **Follow naming conventions:**
      - Match existing test file naming pattern
      - Use descriptive test names that explain what is being tested
@@ -127,10 +129,12 @@ Before proceeding, verify:
      - Document why certain mocks or stubs are needed
    - **Adapt mocking strategy for backend vs frontend:**
      - **Backend**: Mock external services, databases, APIs, file system
-       - Use framework-specific mocking (jest.mock, unittest.mock, etc.)
+       - Use framework-specific mocking (jest.mock, unittest.mock, Moq, NSubstitute for .NET, etc.)
        - Mock HTTP clients, database connections, third-party libraries
-     - **Frontend**: Mock components, hooks, browser APIs, network requests
-       - Mock React components, Vue components, browser APIs (fetch, localStorage, etc.)
+     - **Frontend**: Mock components, hooks/composables, browser APIs, network requests
+       - **React**: Mock React components using jest.mock or vi.mock, mock custom hooks
+       - **Vue 3**: Mock Vue components using global.stubs or vi.mock, mock composables with vi.mock, mock child components
+       - Mock browser APIs (fetch, localStorage, window, etc.) using vi.stubGlobal or jest.mock
        - Use testing library utilities (React Testing Library, Vue Test Utils, etc.)
 
 5. **Create test file**
@@ -139,8 +143,10 @@ Before proceeding, verify:
      - Same directory as source (e.g., `component.ts` → `component.test.ts`)
      - Separate test directory (e.g., `src/` → `tests/` or `__tests__/`)
    - **Follow project's test file naming convention:**
-     - Match existing pattern (e.g., `*.test.ts`, `*_test.py`, `*.spec.js`)
+     - Match existing pattern (e.g., `*.test.ts`, `*_test.py`, `*.spec.js`, `*.spec.ts`, `*Test.cs`, `*Tests.cs`)
      - Place in correct directory structure
+     - For .NET projects, typically place in separate test project (e.g., `Component.Tests/ComponentTests.cs`)
+     - For Vue 3 projects with Vitest, commonly uses `*.spec.ts` or `*.spec.js` pattern
    - **Match project's test structure:**
      - Follow existing test file template/structure
      - Use same imports, setup, and teardown patterns
@@ -187,9 +193,9 @@ Before proceeding, verify:
   - Pattern: Component names, class names, function names
   - Use to locate component definitions and usages
 - `glob_file_search` - Find test files and configuration files
-  - Pattern: `**/*.test.*` (test files)
-  - Pattern: `**/jest.config.*`, `**/vitest.config.*`, `**/pytest.ini` (framework configs)
-  - Pattern: `**/package.json`, `**/requirements.txt` (dependency files)
+  - Pattern: `**/*.test.*`, `**/*Test.cs`, `**/*Tests.cs` (test files)
+  - Pattern: `**/jest.config.*`, `**/vitest.config.*`, `**/pytest.ini`, `**/*.csproj`, `**/*.sln` (framework configs)
+  - Pattern: `**/package.json`, `**/requirements.txt`, `**/*.csproj` (dependency files)
   - Use to identify test framework and existing test patterns
 
 ### Filesystem Tools
@@ -208,15 +214,17 @@ Before proceeding, verify:
   - Commands:
     - `npm test` or `npm test -- {test-file}` - Run tests (Node.js/Jest/Vitest)
     - `pytest {test-file}` - Run tests (Python)
+    - `dotnet test` or `dotnet test --filter {test-file}` - Run tests (.NET/xUnit/NUnit/MSTest)
     - `npm test -- --coverage` - Run tests with coverage (Node.js)
     - `pytest --cov={module}` - Run tests with coverage (Python)
+    - `dotnet test --collect:"XPlat Code Coverage"` - Run tests with coverage (.NET)
   - Use to execute tests and verify they pass, check test coverage
 
 ## Pre-flight Checklist
 - [ ] Component exists in codebase
 - [ ] Component implementation is readable and understandable
 - [ ] Codebase structure is understood (project root, source/test directories)
-- [ ] Test framework identified (Jest, Vitest, pytest, etc.)
+- [ ] Test framework identified (Jest, Vitest, pytest, xUnit, NUnit, MSTest, etc.)
 - [ ] Test file naming convention identified from existing tests
 - [ ] Test directory structure understood
 - [ ] Existing test patterns reviewed
@@ -236,7 +244,7 @@ Execute the create-test workflow to generate unit tests for a specified componen
 6. Ensuring test quality (independence, determinism, clarity)
 
 ### Context
-- The codebase may use different test frameworks (Jest, Vitest, pytest, unittest, etc.)
+- The codebase may use different test frameworks (Jest, Vitest, pytest, unittest, xUnit, NUnit, MSTest, etc.)
 - Test files follow project-specific naming conventions and directory structures
 - Existing test patterns and utilities should be respected and reused
 - Tests should be isolated, fast, and focused on the component being tested
@@ -285,6 +293,28 @@ Output:
 - Tests pass, coverage: 80%
 ```
 
+**Example 2b: Frontend Component Test (Vue 3/Vitest)**
+
+```
+Input: /create-test --type=unit for UserProfile
+
+Component: src/components/UserProfile.vue
+Framework: Vitest + Vue Test Utils (detected from vitest.config.ts)
+Codebase Type: Frontend (Vue 3/TypeScript)
+
+Output:
+- Test file: src/components/UserProfile.spec.ts
+- Tests generated:
+  - "should render user name and email"
+  - "should display loading state when fetching user data"
+  - "should handle edit button click and emit event"
+  - "should display error message when fetch fails"
+  - "should update when props change"
+- Mocks: API calls, composables, child components
+- Uses: mount() from @vue/test-utils, vi.mock for API mocking
+- Tests pass, coverage: 82%
+```
+
 **Example 3: Python Function Test (pytest)**
 
 ```
@@ -305,6 +335,26 @@ Output:
 - Tests pass, coverage: 100%
 ```
 
+**Example 4: .NET Service Test (xUnit)**
+
+```
+Input: /create-test --type=unit for PaymentService
+
+Component: src/Services/PaymentService.cs
+Framework: xUnit (detected from PaymentService.Tests.csproj)
+Codebase Type: Backend (.NET/C#)
+
+Output:
+- Test file: tests/PaymentService.Tests/PaymentServiceTests.cs
+- Tests generated:
+  - "ProcessPayment_WithValidCard_ReturnsSuccess"
+  - "ProcessPayment_WithInvalidCard_ThrowsPaymentException"
+  - "ProcessPayment_WithExpiredCard_ThrowsPaymentException"
+  - "ProcessPayment_WithInsufficientFunds_ReturnsDeclined"
+- Mocks: IPaymentGateway (using Moq), ILogger
+- Tests pass, coverage: 88%
+```
+
 ### Constraints
 
 **Rules (Must Follow):**
@@ -320,7 +370,7 @@ Output:
 10. **Appropriate Mocking**: Mock external dependencies appropriately for backend vs frontend.
 
 **Existing Standards (Reference):**
-- Test framework conventions: Follow framework-specific best practices (Jest, Vitest, pytest, etc.)
+- Test framework conventions: Follow framework-specific best practices (Jest, Vitest, pytest, xUnit, NUnit, MSTest, etc.)
 - Test file organization: Match existing project structure
 - Naming conventions: Follow existing test file naming patterns
 - Test utilities: Reuse existing test helpers or utilities when available
@@ -347,7 +397,7 @@ The generated tests should be production-ready, following best practices and pro
 
 ### Backend Tests
 - **Mock external services:**
-  - HTTP clients, API calls (use framework mocking like `jest.mock`, `unittest.mock`)
+  - HTTP clients, API calls (use framework mocking like `jest.mock`, `unittest.mock`, `Moq`, `NSubstitute` for .NET)
   - Database connections and queries
   - File system operations
   - Third-party service integrations
@@ -365,23 +415,48 @@ The generated tests should be production-ready, following best practices and pro
   - Test with realistic data structures
 
 ### Frontend Tests
+
+#### React Tests
 - **Mock components, hooks, and browser APIs:**
-  - Mock child components (React, Vue, etc.)
-  - Mock custom hooks
+  - Mock child components using `jest.mock` or Vitest `vi.mock`
+  - Mock custom hooks (React hooks)
   - Mock browser APIs (fetch, localStorage, window, etc.)
 - **Test user interactions and state management:**
   - Component rendering and display
   - User interactions (clicks, inputs, navigation)
-  - State changes and updates
+  - State changes and updates (useState, useEffect, etc.)
   - Event handling
-- **Focus on component rendering and behavior:**
-  - Component props and rendering
-  - User interaction flows
-  - Component lifecycle and state
-- **Use appropriate frontend testing patterns:**
-  - React Testing Library, Vue Test Utils, etc.
+- **Use React Testing Library patterns:**
   - Focus on testing behavior from user perspective
+  - Use `render()`, `screen.getBy*`, `fireEvent` or `userEvent`
   - Avoid testing implementation details
+
+#### Vue 3 Tests (Vitest + Vue Test Utils)
+- **Mock components, composables, and browser APIs:**
+  - Mock child components using `vi.mock` or `global.stubs`
+  - Mock composables (Vue 3 Composition API) using `vi.mock`
+  - Mock browser APIs (fetch, localStorage, window, etc.) using `vi.stubGlobal`
+- **Test component mounting and rendering:**
+  - Use `mount()` or `shallowMount()` from `@vue/test-utils`
+  - Test component props, emits, slots, and provide/inject
+  - Test Composition API setup (ref, reactive, computed, watch)
+- **Test user interactions and Vue-specific behavior:**
+  - Component rendering and display
+  - User interactions using `wrapper.find()` and `trigger()`
+  - Props updates and reactivity
+  - Event emissions (test emitted events with `wrapper.emitted()`)
+  - Vue Router navigation (mock router)
+  - Pinia/Vuex state management
+- **Vue 3 Composition API considerations:**
+  - Test `<script setup>` components (mount and interact)
+  - Test composables separately if needed
+  - Test reactivity with ref/reactive updates
+  - Mock provide/inject dependencies
+- **Use appropriate Vue testing patterns:**
+  - Vue Test Utils (`mount`, `shallowMount`, `Wrapper`)
+  - Vitest mocking utilities (`vi.mock`, `vi.fn`, `vi.spyOn`)
+  - Focus on testing component behavior and user interactions
+  - Test props, emits, slots separately from implementation details
 
 ## Unit Test Checklist
 - [ ] Codebase type detected (backend/frontend)
