@@ -201,8 +201,8 @@ jobs:
 
               # Update Latest Release section
               # Replace everything from "## Latest Release" through "---" separator
-              # Normalize to have exactly one blank line after the heading, then the release entry
-              latest_pattern = r'(## Latest Release\n)\n*(---)'
+              # This matches both empty sections (just blank lines) and sections with existing content
+              latest_pattern = r'(## Latest Release\n)(?:.*?\n)*(---)'
               content = re.sub(latest_pattern, r'\1\n' + release_entry + r'\2', content, flags=re.DOTALL)
 
               # Handle Release History section
