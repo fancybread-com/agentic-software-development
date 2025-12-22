@@ -119,10 +119,13 @@ jobs:
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
           VERSION="${TAG_NAME#v}"
 
+          # Get list of assets and filter for source archives
+          # GitHub creates source archives with names like: repo-name-version.tar.gz
           gh release view "$TAG_NAME" --json assets | \
-            jq -r --arg pattern "^${REPO_NAME}-${VERSION}" '.assets[] | select(.name | test($pattern)) | .name' | \
-            while IFS= read -r asset; do
+            jq -r --arg pattern "^${REPO_NAME}-${VERSION}\\.(tar\\.gz|zip)$" '.assets[] | select(.name | test($pattern)) | .name' | \
+            while IFS= read -r asset || [ -n "$asset" ]; do
               if [ -n "$asset" ]; then
+                echo "Removing source archive: $asset"
                 gh release delete-asset "$TAG_NAME" "$asset" --yes || true
               fi
             done
@@ -160,54 +163,49 @@ jobs:
           # Use Python to update the releases.md file
           python3 << 'PYTHON_EOF'
           import re
+          import sys
 
           releases_file = 'docs/releases.md'
           release_entry_file = '/tmp/release_entry.txt'
 
-          # Read release entry
-          with open(release_entry_file, 'r') as f:
-              release_entry = f.read()
+          try:
+              # Read release entry
+              with open(release_entry_file, 'r') as f:
+                  release_entry = f.read()
 
-          # Extract tag name from release entry (e.g., "v1.0.0" from "## [v1.0.0](...)")
-          tag_match = re.search(r'## \[([^\]]+)\]', release_entry)
-          tag_name = tag_match.group(1) if tag_match else ''
+              # Extract tag name from release entry (e.g., "v1.0.0" from "## [v1.0.0](...)")
+              tag_match = re.search(r'## \[([^\]]+)\]', release_entry)
+              tag_name = tag_match.group(1) if tag_match else ''
 
-          # Read releases.md
-          with open(releases_file, 'r') as f:
-              content = f.read()
+              # Read releases.md
+              with open(releases_file, 'r') as f:
+                  content = f.read()
 
-          # Update Latest Release section - replace comment or existing entry with actual release entry
-          # Try pattern with comment first
-          latest_pattern = r'(## Latest Release\n\n)(<!--.*?-->\n\n)(---)'
-          latest_replacement = r'\1' + release_entry + r'\3'
-          content = re.sub(latest_pattern, latest_replacement, content, flags=re.DOTALL)
+              # Update Latest Release section
+              # Pattern to match from "## Latest Release" to "---" separator (handles empty or with content)
+              latest_pattern = r'(## Latest Release\n\n)(?:<!--.*?-->\n\n|.*?)(\n---)'
+              content = re.sub(latest_pattern, r'\1' + release_entry + r'\2', content, flags=re.DOTALL)
 
-          # If no comment pattern matched, replace entire section (removes old entries)
-          if not re.search(latest_pattern, content, flags=re.DOTALL):
-              # Pattern to match from "## Latest Release" to "---" separator
-              latest_replace_pattern = r'(## Latest Release\n\n).*?(\n---)'
-              content = re.sub(latest_replace_pattern, r'\1' + release_entry + r'\2', content, flags=re.DOTALL)
+              # Handle Release History section
+              # First, remove any existing entries for this tag to prevent duplicates
+              if tag_name:
+                  escaped_tag = re.escape(tag_name)
+                  duplicate_pattern = r'## \[{}\]\([^\)]+\) - [^\n]+\n\n\*\*\[Download\]\([^\)]+\)\*\* \| \[Release Notes\]\([^\)]+\)\n\n'.format(escaped_tag)
+                  content = re.sub(duplicate_pattern, '', content, flags=re.MULTILINE)
 
-          # Handle Release History section
-          # First, remove any existing entries for this tag to prevent duplicates
-          if tag_name:
-              # Pattern to match a release entry (from ## to next ## or ---)
-              # Matches: ## [tag_name](url) - date\n\n**[Download](url)** | [Release Notes](url)\n\n
-              escaped_tag = re.escape(tag_name)
-              duplicate_pattern = r'## \[{}\]\([^\)]+\) - [^\n]+\n\n\*\*\[Download\]\([^\)]+\)\*\* \| \[Release Notes\]\([^\)]+\)\n\n'.format(escaped_tag)
-              content = re.sub(duplicate_pattern, '', content, flags=re.MULTILINE)
-
-          # Add to Release History section - insert after heading, before existing entries
-          history_pattern = r'(## Release History\n\n)(<!--.*?-->\n\n)'
-          if not re.search(history_pattern, content, re.DOTALL):
-              # No comment, just heading
+              # Add to Release History section - insert after heading
               history_pattern = r'(## Release History\n\n)'
-          history_replacement = r'\1' + release_entry
-          content = re.sub(history_pattern, history_replacement, content, flags=re.DOTALL)
+              history_replacement = r'\1' + release_entry
+              content = re.sub(history_pattern, history_replacement, content, flags=re.DOTALL)
 
-          # Write back
-          with open(releases_file, 'w') as f:
-              f.write(content)
+              # Write back
+              with open(releases_file, 'w') as f:
+                  f.write(content)
+
+              print("Successfully updated releases.md")
+          except Exception as e:
+              print(f"Error updating releases.md: {e}", file=sys.stderr)
+              sys.exit(1)
           PYTHON_EOF
 
       - name: Commit documentation updates
