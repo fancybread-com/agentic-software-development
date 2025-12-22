@@ -200,22 +200,37 @@ jobs:
                   content = f.read()
 
               # Update Latest Release section
-              # Replace everything from "## Latest Release" through "---" separator
-              # This matches both empty sections (just blank lines) and sections with existing content
-              latest_pattern = r'(## Latest Release\n)(?:.*?\n)*(---)'
+              # Replace everything from "## Latest Release" through the FIRST "---" separator
+              # Use negative lookahead to ensure we stop at the first "---" and don't consume Release History
+              latest_pattern = r'(## Latest Release\n)(?:(?!---).)*?\n(---)'
               content = re.sub(latest_pattern, r'\1\n' + release_entry + r'\2', content, flags=re.DOTALL)
 
               # Handle Release History section
-              # First, remove any existing entries for this tag to prevent duplicates
-              if tag_name:
-                  escaped_tag = re.escape(tag_name)
-                  duplicate_pattern = r'## \[{}\]\([^\)]+\) - [^\n]+\n\n\*\*\[Download\]\([^\)]+\)\*\* \| \[Release Notes\]\([^\)]+\)\n\n'.format(escaped_tag)
-                  content = re.sub(duplicate_pattern, '', content, flags=re.MULTILINE)
+              # First, check if the section exists, if not create it after Latest Release section
+              if '## Release History' not in content:
+                  # Insert Release History section after the first "---" (after Latest Release)
+                  # Pattern: "---\n\n## [next section]" or "---\n\n## Download" etc.
+                  history_insert_pattern = r'(\n---\n\n)(## (?!Release History))'
+                  if re.search(history_insert_pattern, content):
+                      # Insert before the next section (Download, Installation, Changelog, etc.)
+                      content = re.sub(history_insert_pattern, r'\1## Release History\n\n' + release_entry + r'\2', content, flags=re.DOTALL)
+                  else:
+                      # No next section found, append before final "---" or at end
+                      if content.rstrip().endswith('---'):
+                          content = content.rstrip()[:-3] + '\n\n## Release History\n\n' + release_entry + '\n---'
+                      else:
+                          content = content.rstrip() + '\n\n## Release History\n\n' + release_entry
+              else:
+                  # Section exists, remove any existing entries for this tag to prevent duplicates
+                  if tag_name:
+                      escaped_tag = re.escape(tag_name)
+                      duplicate_pattern = r'## \[{}\]\([^\)]+\) - [^\n]+\n\n\*\*\[Download\]\([^\)]+\)\*\* \| \[Release Notes\]\([^\)]+\)\n\n'.format(escaped_tag)
+                      content = re.sub(duplicate_pattern, '', content, flags=re.MULTILINE)
 
-              # Add to Release History section - insert after heading
-              history_pattern = r'(## Release History\n\n)'
-              history_replacement = r'\1' + release_entry
-              content = re.sub(history_pattern, history_replacement, content, flags=re.DOTALL)
+                  # Add to Release History section - insert after heading
+                  history_pattern = r'(## Release History\n\n)'
+                  history_replacement = r'\1' + release_entry
+                  content = re.sub(history_pattern, history_replacement, content, flags=re.DOTALL)
 
               # Write back
               with open(releases_file, 'w') as f:
