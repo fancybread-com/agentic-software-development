@@ -20,16 +20,9 @@ Before defining schemas for our Cursor skills (FB-18), we need to validate that 
 #### Skills in Scope
 | Skill (slash command) | Path | Primary Purpose | SDLC Phase |
 |------------------------|------|-----------------|------------|
-| `/mcp-status` | `skills/mcp-status/SKILL.md` | Verify MCP connections | Infrastructure |
-| `/create-task` | `skills/create-task/SKILL.md` | Create work items | Product |
-| `/decompose-task` | `skills/decompose-task/SKILL.md` | Break epics into stories | Product |
-| `/refine-task` | `skills/refine-task/SKILL.md` | Add detail, estimate points | Product |
-| `/create-plan` | `skills/create-plan/SKILL.md` | Create implementation plan | Planning |
 | `/start-task` | `skills/start-task/SKILL.md` | Begin development | Development |
 | `/complete-task` | `skills/complete-task/SKILL.md` | Commit, push, create PR | Development |
-| `/create-test` | `skills/create-test/SKILL.md` | Write tests | Quality |
 | `/review-code` | `skills/review-code/SKILL.md` | AI code review | Quality |
-| `/setup-asdlc` | `skills/setup-asdlc/SKILL.md` | Initialize repo for ASDLC | Utilities |
 
 #### ASDLC Artifacts
 - **Spec**: Blueprint + Contract (permanent living specification)

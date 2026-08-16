@@ -1,23 +1,22 @@
 # MCP Tool Definitions (mcps/)
 
-**`mcps/` is the list of record** for which MCP tools this project supports. Each `mcps/<server>/tools/*.json` conforms to [schemas/mcp-tool.schema.json](../schemas/mcp-tool.schema.json). Commands, validators, and mcp-status use this directory (not a runtime MCP API) to know what tools exist.
+**`mcps/` is the list of record** for which MCP tools this project supports. Each `mcps/<server>/tools/*.json` conforms to [schemas/mcp-tool.schema.json](../schemas/mcp-tool.schema.json). Commands and validators use this directory (not a runtime MCP API) to know what tools exist.
 
 **List all tools:** `python schemas/validate_mcps.py --list` (TSV) or `--list --json`.
 
 **Layout:** `mcps/<server>/tools/<tool>.json` — e.g. `mcps/atlassian/tools/getJiraIssue.json` for `mcp_atlassian_getJiraIssue`.
 
-**MCP combinations:** **GitHub + Jira** or **GitHub + ADO** (issue tracker). ASDLC optional.
+**MCP combination:** **GitHub + Jira** (issue tracker). ASDLC optional.
 
-**Curated for tool limits:** We only include tools that are referenced in `skills/*/SKILL.md` or `skills/mcp-status/SKILL.md`. This keeps the list small so developers with multiple MCP servers stay under IDE tool limits. Add a tool only when a skill or mcp-status uses it.
+**Curated for tool limits:** We only include tools that are referenced in `skills/*/SKILL.md`. This keeps the list small so developers with multiple MCP servers stay under IDE tool limits. Add a tool only when a skill uses it.
 
 ## Servers
 
 | Server | Path | Tools |
 |--------|------|-------|
-| **atlassian** | `atlassian/tools/` | getAccessibleAtlassianResources, getJiraIssue, getTransitionsForJiraIssue, transitionJiraIssue, addCommentToJiraIssue, searchJiraIssuesUsingJql, editJiraIssue, getJiraProjectIssueTypesMetadata, getJiraIssueRemoteIssueLinks, createJiraIssue, atlassianUserInfo |
-| **github** | `github/tools/` | list_branches, create_branch, issue_read, create_issue, add_issue_comment, list_commits, get_commit, get_pull_request, create_pull_request |
+| **atlassian** | `atlassian/tools/` | getAccessibleAtlassianResources, getJiraIssue, getTransitionsForJiraIssue, transitionJiraIssue, addCommentToJiraIssue, atlassianUserInfo |
+| **github** | `github/tools/` | list_branches, create_branch, list_commits, get_commit, get_pull_request, create_pull_request |
 | **asdlc** | `asdlc/tools/` | list_articles |
-| **ado** | `ado/tools/` | core_list_projects |
 
 ## Schema
 
@@ -43,7 +42,7 @@ The `--list` output is derived from `mcps/` only (filesystem); no MCP calls. Use
 
 ## Adding or updating tools
 
-1. **Only add tools that are referenced in `skills/*/SKILL.md` or `skills/mcp-status/SKILL.md`** (see “Curated for tool limits” above).
+1. **Only add tools that are referenced in `skills/*/SKILL.md`** (see “Curated for tool limits” above).
 2. Create or edit `mcps/<server>/tools/<tool>.json`.
 3. Ensure `name` and `inputSchema` (with `type: "object"` and `properties`) are present.
 4. Run `python schemas/validate_mcps.py`.

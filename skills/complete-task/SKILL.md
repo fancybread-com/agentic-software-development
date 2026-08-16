@@ -31,7 +31,7 @@ Commit changes, push to remote, create pull request, and transition issue to "Co
 
 Before proceeding, verify:
 
-1. **MCP Status Validation**: Perform MCP server status checks (see `mcp-status.md` for detailed steps)
+1. **MCP Status Validation**: Perform MCP server status checks
    - Test each configured MCP server connection (Atlassian, GitHub, etc.)
    - Verify all required integrations are authorized and operational
    - **If any MCP server fails validation, STOP and report the failure. Do not proceed.**
@@ -364,7 +364,7 @@ Execute the complete-task workflow to finalize development work on a specified t
 5. Updating the issue tracker with completion status
 
 ### Context
-- The task is tracked in an issue management system (Jira, Azure DevOps, etc.)
+- The task is tracked in an issue management system (Jira, etc.)
 - **Specs** may exist at `specs/{FEATURE_DOMAIN}/spec.md` with permanent feature contracts
 - **Plans** may exist at `.plans/{TASK_KEY}-*.plan.md` with transient implementation details
 - **AGENTS.md** defines 3-tier Operational Boundaries (Constitution)
@@ -526,7 +526,6 @@ Ready for review.
 11. **Error Handling**: If any step fails (push, PR creation, issue transition), STOP and report the specific error. Do not proceed with remaining steps.
 
 **Existing Standards (Reference):**
-- MCP status validation: See `mcp-status.md` for detailed MCP server connection checks
 - Spec guidance: See `specs/README.md` for Same-Commit Rule and when to update specs
 - Constitutional Review: See AGENTS.md Operational Boundaries for 3-tier system
 - Branch naming: Type prefix format (`{type}/{TASK_KEY}`) as established in `start-task.md`

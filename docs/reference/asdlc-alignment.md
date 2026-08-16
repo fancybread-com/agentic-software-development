@@ -10,16 +10,9 @@ The skills in this project implement ASDLC patterns and pillars. Each skill serv
 
 | Command | ASDLC Patterns | ASDLC Pillar | Description |
 |---------|---------------|--------------|-------------|
-| `/create-task` | [The PBI](https://asdlc.io/patterns/the-pbi/), [Agent Constitution](https://asdlc.io/patterns/agent-constitution/) | Factory Architecture, Standardized Parts | Creates PBIs with standardized anatomy; workflow station for task creation |
-| `/decompose-task` | [The PBI](https://asdlc.io/patterns/the-pbi/), [Context Gates](https://asdlc.io/patterns/context-gates/) | Factory Architecture, Quality Control | Decomposition workflow with information-density gate |
-| `/refine-task` | [The PBI](https://asdlc.io/patterns/the-pbi/), [Context Gates](https://asdlc.io/patterns/context-gates/) | Factory Architecture, Quality Control | Refinement step with Definition of Ready (DoR) as gate |
-| `/create-plan` | [The Spec](https://asdlc.io/patterns/the-spec/), [The PBI](https://asdlc.io/patterns/the-pbi/) | Standardized Parts | Creates Specs (permanent state) or Plans (transient delta) |
 | `/start-task` | [The Spec](https://asdlc.io/patterns/the-spec/), [The PBI](https://asdlc.io/patterns/the-pbi/), [Context Gates](https://asdlc.io/patterns/context-gates/) | Factory Architecture, Quality Control | Command station with pre-flight validation gates |
 | `/complete-task` | [Constitutional Review](https://asdlc.io/patterns/constitutional-review/), [The Spec](https://asdlc.io/patterns/the-spec/), [The PBI](https://asdlc.io/patterns/the-pbi/), [Context Gates](https://asdlc.io/patterns/context-gates/) | Quality Control, Standardized Parts | Review Gate with dual-contract validation (Spec + Constitution) |
-| `/create-test` | [The Spec](https://asdlc.io/patterns/the-spec/), [Context Gates](https://asdlc.io/patterns/context-gates/) | Quality Control, Standardized Parts | Test generation as output gate; uses Contract scenarios from Spec |
 | `/review-code` | [Adversarial Code Review](https://asdlc.io/patterns/adversarial-code-review/), [Constitutional Review](https://asdlc.io/patterns/constitutional-review/), [The Spec](https://asdlc.io/patterns/the-spec/) | Quality Control | Review Gate using Critic Agent for dual-contract validation |
-| `/mcp-status` | [Context Gates](https://asdlc.io/patterns/context-gates/) | Quality Control | Pre-flight validation gate for other commands |
-| `/setup-asdlc` | [Agent Constitution](https://asdlc.io/patterns/agent-constitution/), [The Spec](https://asdlc.io/patterns/the-spec/) | Factory Architecture, Standardized Parts | Repository initialization command that creates AGENTS.md template and directory structure |
 
 ## ASDLC Pillars
 

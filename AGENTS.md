@@ -24,10 +24,9 @@
 - **Version Control:** Git + GitHub
 
 ### MCP Integrations
-- **MCP combinations:** **GitHub + Jira** or **ADO** (repository + issue tracker). ASDLC optional.
+- **MCP combination:** **GitHub + Jira** (repository + issue tracker). ASDLC optional.
 - **Atlassian MCP Server** (`user-atlassian`): Jira issue management, Confluence documentation
 - **GitHub MCP Server** (`user-github`): Repository operations, pull requests, issues
-- **Azure DevOps MCP Server** (`ado`): Work items, repos, pull requests (@azure-devops/mcp)
 - **ASDLC.io MCP Server** (`user-asdlc`): ASDLC knowledge base for pattern queries
 
 ### Skill Structure
@@ -78,7 +77,7 @@ Documentation **MUST**:
 - **ASK** before changing MCP integration patterns (system dependencies)
 - **ASK** before restructuring documentation (impacts navigation and discoverability)
 - **ASK** before committing large file reorganizations (risk of data loss)
-- **ASK** before creating new skill types beyond the 9 standard skills
+- **ASK** before creating new skill types beyond the 3 standard skills
 
 ### Tier 3 (NEVER): Safety limits
 
@@ -96,17 +95,11 @@ Documentation **MUST**:
 
 | Intent | Command | Notes |
 |--------|---------|-------|
-| **Check Status** | `/mcp-status` | Verify MCP server connections before other operations |
-| **Create Work** | `/create-task --type=<type> for <description>` | Types: epic, story, bug, task. Adapts workflow by type |
-| **Decompose Epic** | `/decompose-task <TASK-ID>` | Break epics into stories. Validates info density (5 elements) |
-| **Refine Backlog** | `/refine-task <TASK-ID>` | Add detail, estimate story points. Uses historical data |
-| **Plan Feature** | `/create-plan for <TASK-ID>` | Create spec (permanent) or plan (transient). Outputs to `specs/` or `.plans/` |
-| **Start Work** | `/start-task <TASK-ID>` | Create branch, transition to "In Progress", implement per plan |
+| **Start Work** | `/start-task <TASK-ID>` | Create branch, transition to "In Progress", implement per spec/plan/acceptance criteria |
 | **Complete Work** | `/complete-task <TASK-ID>` | Commit, push, Constitutional Review, create PR. Link to story |
-| **Write Tests** | `/create-test --type=<type> for <component>` | Types: unit, integration, e2e. Adapts for backend/frontend |
 | **Review Code** | `/review-code for PR #<number>` | Adversarial code review with dual-contract validation (Spec + Constitution). Acts as Review Gate |
 
-**Workflow:** `/create-task` → `/decompose-task` → `/refine-task` → `/create-plan` (creates spec/plan) → `/start-task` → `/complete-task` → `/review-code`. **Utilities:** `/mcp-status`, `/setup-asdlc`. **Project skills** (in `.cursor/skills/`, versioned in repo, not in docs): e.g. `/audit-skills`, prepare-changelog, create-release.
+**Workflow:** `/start-task` → `/complete-task` → `/review-code`. **Project skills** (in `.cursor/skills/`, versioned in repo, not in docs): e.g. `/audit-skills`, prepare-changelog, create-release.
 
 ---
 
@@ -144,7 +137,6 @@ directory_map:
     atlassian/tools: "Atlassian MCP tool schemas (Jira, Confluence); mcp_atlassian_*"
     github/tools: "GitHub MCP tool schemas (repos, PRs, issues); mcp_github_*"
     asdlc/tools: "ASDLC.io knowledge base; mcp_asdlc_*"
-    ado/tools: "Azure DevOps MCP tool schemas (@azure-devops/mcp); mcp_ado_*"
 
   # Configuration
   mkdocs.yml: "MkDocs configuration - site structure, theme, plugins"
@@ -333,7 +325,7 @@ Fetch the task from Jira.
 Fetch task from Jira using getJiraIssue:
 - Parameters: cloudId, issueIdOrKey = {TASK_KEY}
 - If task not found, STOP and report: "Task {TASK_KEY} not found"
-- If auth fails, STOP and report: "MCP connection failed. Run /mcp-status"
+- If auth fails, STOP and report: "MCP connection failed. Verify MCP configuration and reauthorize the server."
 ```
 
 ### ❌ Hardcoded Values
@@ -367,8 +359,8 @@ Update story points:
 This project implements the three pillars of [ASDLC.io](https://asdlc.io). **Canonical definitions:** [Agentic SDLC](https://asdlc.io/concepts/agentic-sdlc/) → Strategic Pillars (no separate pillar articles).
 
 ### Factory Architecture (Orchestration)
-- **9 Skill Stations:** Each skill is a specialized workstation
-- **Phase Boundaries:** Product → Planning → Development → Quality
+- **3 Skill Stations:** Each skill is a specialized workstation
+- **Phase Boundaries:** Development → Quality
 - **MCP as Conveyor Belt:** Data flows between systems (Jira → Plans → Code → GitHub)
 
 ### Standardized Parts (Determinism)
@@ -390,18 +382,12 @@ This project implements the three pillars of [ASDLC.io](https://asdlc.io). **Can
 
 ```mermaid
 graph LR
-  A["/create-task"] --> B["/decompose-task"]
-  B --> C["/refine-task"]
-  C --> D["/create-plan"]
-  D --> E["/start-task"]
-  E --> F["/complete-task"]
-  F --> G["/review-code"]
+  A["/start-task"] --> B["/complete-task"]
+  B --> C["/review-code"]
 ```
 
 ### Command Dependencies
 
-- `/decompose-task` requires task with sufficient info density (5 elements)
-- `/refine-task` requires task to exist and not be "Done"
 - `/start-task` requires spec (`specs/{FEATURE_DOMAIN}/spec.md`) or plan (`.plans/{TASK_KEY}-*.plan.md`) or acceptance criteria
 - `/complete-task` requires uncommitted changes, task in "In Progress", runs Constitutional Review before PR
 - `/review-code` requires PR number or branch name
@@ -409,9 +395,7 @@ graph LR
 ### Validation Points
 
 - **Pre-flight:** MCP status check (required for all skills)
-- **Pre-decompose:** Information density validation (5-element scoring)
-- **Pre-refinement:** Definition of Ready check
-- **Pre-start:** Plan existence or clear acceptance criteria
+- **Pre-start:** Spec, plan, or clear acceptance criteria
 - **Pre-complete:** Tests pass, lints clean
 - **Post-complete:** PR created, story transitioned
 
@@ -430,7 +414,6 @@ This section captures accumulated wisdom from implementation experience. Update 
 
 ### Command Design Insights
 
-- **Intelligent Analysis Works:** `/decompose-task` and `/refine-task` use pattern recognition effectively
 - **Conservative Refinement Better:** Only add missing critical details, preserve existing content
 - **Plan Optional for Simple Tasks:** 2-point documentation tasks don't need formal plans
 - **Phase Structure Helps:** Organizing epics by phases (FB-16) produces clean decomposition

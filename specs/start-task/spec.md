@@ -24,7 +24,7 @@ Developers need a consistent way to begin work on a task: run pre-flight checks 
 ### Anti-Patterns
 
 - **Don’t skip MCP validation** — If any MCP server fails, STOP. Commands that use Jira/GitHub will fail later with unclear errors.
-- **Don’t proceed without spec or plan** — If neither `specs/{FEATURE_DOMAIN}/spec.md` nor `.plans/{TASK_KEY}-*.plan.md` exists, STOP and suggest `/create-plan {TASK_KEY}`.
+- **Don’t proceed without spec, plan, or acceptance criteria** — If none of `specs/{FEATURE_DOMAIN}/spec.md`, `.plans/{TASK_KEY}-*.plan.md`, or clear acceptance criteria on the task exist, STOP and report that the task lacks enough context to start.
 - **Don’t auto-commit** — `/start-task` leaves changes uncommitted. Committing is done in `/complete-task`.
 
 ---
@@ -34,7 +34,7 @@ Developers need a consistent way to begin work on a task: run pre-flight checks 
 ### Definition of Done
 
 - [ ] MCP status validation performed; all required MCP servers connected.
-- [ ] Spec and/or plan read; if neither exists, STOP and suggest `/create-plan {TASK_KEY}`.
+- [ ] Spec and/or plan read; if neither exists, check for acceptance criteria; if none of the three exist, STOP.
 - [ ] Story in "In Progress" and assigned to current user (transition via MCP if needed).
 - [ ] Branch `{type}/{TASK_KEY}` created and checked out; work checklist posted to the issue with the actual branch name.
 - [ ] Implementation performed per spec/plan; changes left uncommitted.
@@ -53,7 +53,7 @@ Developers need a consistent way to begin work on a task: run pre-flight checks 
 - **When**: The user runs `/start-task FB-44`
 - **Then**: The command transitions FB-44 to In Progress, creates `feat/FB-44`, posts a work checklist to FB-44, and proceeds to implementation (changes uncommitted).
 
-**Scenario: No plan or spec — STOP**
-- **Given**: MCP connected; neither `specs/foo/spec.md` nor `.plans/FB-99-*.plan.md` exists
+**Scenario: No plan, spec, or acceptance criteria — STOP**
+- **Given**: MCP connected; neither `specs/foo/spec.md` nor `.plans/FB-99-*.plan.md` exists, and FB-99 has no acceptance criteria
 - **When**: The user runs `/start-task FB-99`
-- **Then**: The command reports "No plan or spec found for FB-99. Run `/create-plan FB-99` first." and does not create a branch or post a checklist.
+- **Then**: The command reports "No plan, spec, or acceptance criteria found for FB-99." and does not create a branch or post a checklist.

@@ -22,7 +22,7 @@ from pathlib import Path
 from jsonschema import Draft7Validator
 
 # Known MCP server ids
-KNOWN_SERVERS = ["atlassian", "github", "asdlc", "ado"]
+KNOWN_SERVERS = ["atlassian", "github", "asdlc"]
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = REPO_ROOT / "schemas" / "mcp-tool.schema.json"

@@ -7,7 +7,7 @@ disable-model-invocation: true
 # Review Code
 
 ## Overview
-Perform adversarial AI-assisted code review on a pull request or branch changes using Builder/Critic separation with dual-contract validation (Spec + Constitution).
+Perform adversarial AI-assisted code review on a pull request or branch changes using Builder/Critic separation with dual-contract validation (Spec + Constitution). The Critic role is handed off to an independent subagent or a native code review tool when the environment supports one, so the review is genuinely free of implementation bias rather than simulated within the same session.
 
 ## Definitions
 
@@ -33,7 +33,8 @@ Perform adversarial AI-assisted code review on a pull request or branch changes 
   - Indicates what was added (+), removed (-), or modified
   - Essential for understanding the scope of changes
 - **Builder Agent**: The agent context that retrieves data, reads files, and packages context (no judgment)
-- **Critic Agent**: Fresh context session that performs validation, identifies violations, and judges quality
+- **Critic Agent**: The independent reviewer that performs validation, identifies violations, and judges quality, with no access to the Builder's conversation or implementation history. Realized as, in priority order: (1) a native code review skill/tool already available in the environment, (2) an independently-spawned subagent given only the packaged context, or (3) a manual fallback prompt evaluated in the same session when neither is available
+- **Hand-off**: The act of transferring the packaged review context (diff, Spec, Constitution) to the Critic via whichever mechanism above is available, rather than the Builder reviewing its own work
 - **Spec**: Living specification at `specs/{FEATURE_DOMAIN}/spec.md` containing:
   - **Blueprint**: Context, Architecture, Anti-Patterns (architectural constraints)
   - **Contract**: Definition of Done, Regression Guardrails, Scenarios (behavioral verification)
@@ -59,9 +60,9 @@ Perform adversarial AI-assisted code review on a pull request or branch changes 
 
 Before proceeding, verify:
 
-1. **MCP Status Validation**: GitHub MCP connection required (see `mcp-status.md` for detailed steps)
-   - Use GitHub MCP tools to verify connection
-   - **If GitHub MCP connection fails, STOP and report: "GitHub MCP connection failed. Please verify MCP configuration (see mcp-status.md)."**
+1. **MCP Status Validation**: GitHub MCP connection required
+   - Use a lightweight read-only GitHub MCP tool to verify connection
+   - **If GitHub MCP connection fails, STOP and report: "GitHub MCP connection failed. Please verify MCP configuration."**
    - **MCP Tool Usage Standards**: MCP tool usage should follow best practices (check schema files, validate parameters, handle errors gracefully). These standards are documented in AGENTS.md §3 Operational Boundaries if AGENTS.md exists, but apply universally regardless.
 
 2. **PR/Branch Existence**: Verify {PR_KEY} or {BRANCH_NAME} is valid and accessible
@@ -137,20 +138,21 @@ Before proceeding, verify:
        - Store status: "Constitutional Review: SKIPPED (AGENTS.md not found)"
        - Proceed with Spec-only validation (if Spec exists) or minimal validation
 
-### [CRITIC AGENT CONTEXT - FRESH SESSION]
+### [HAND OFF TO CRITIC]
 
-4. **Invoke Critic Agent for Adversarial Review**
-   - **Package context for Critic:**
+4. **Delegate to an independent Critic for Adversarial Review**
+   - **Package context for the Critic:**
      - Spec Blueprint + Contract (if exists)
      - AGENTS.md Operational Boundaries (Tier 1, Tier 2, Tier 3) - if AGENTS.md exists
      - Code diff from Step 1
      - Note: If AGENTS.md missing but Spec exists, validate against Spec only. If both missing, perform minimal validation.
      - Changed files list
-   - **Create fresh context session:**
-     - **CRITICAL**: Critic Agent must have no bias from implementation
-     - Use separate conversation or explicit context boundary
-     - Critic Agent has not seen the implementation process, only the contracts and code
-   - **Critic Agent prompt structure:**
+   - **Choose a hand-off mechanism, in this priority order:**
+     1. **Native code review skill/tool**: If the environment already has a dedicated code review skill or tool installed (e.g. a `/code-review`-style skill), invoke it with the packaged context and the dual-contract validation task below, and use its structured findings as the Critic's output. Prefer this — it's typically more capable and already tuned for the environment.
+     2. **Independent subagent**: If the environment supports spawning an independent subagent or session (e.g. a Task/Agent tool, a background agent), spawn one with **only** the packaged context above as its input — no access to this conversation, the Builder's reasoning, or the implementation history. Give it the Critic Agent task below as its complete instructions. This is genuine fresh-context isolation, not a simulation of it.
+     3. **Manual fallback**: If neither is available, construct the Critic Agent prompt below and evaluate it as objectively as possible within the current session. In this case, note in the final report: "Fresh-context isolation unavailable in this environment — review performed without agent hand-off."
+   - **CRITICAL**: However the hand-off happens, the Critic must have no bias from implementation — it validates only the contracts and the code, never the discussion of how or why the code was written.
+   - **Critic Agent task** (use verbatim as the native tool's review instructions, the subagent's prompt, or — only in the manual fallback case — the prompt evaluated in-session):
      ```
      You are a Critic Agent performing Adversarial Code Review with dual-contract validation.
 
@@ -249,10 +251,7 @@ Before proceeding, verify:
 
      Rationale: [Explanation based on violations found]
      ```
-   - **Model routing:**
-     - Use reasoning-optimized model if available (e.g., o1, o3-mini for cost-effective reasoning)
-     - Fallback to standard model if reasoning model unavailable
-     - Note: Reasoning models excel at adversarial validation tasks
+   - **Model preference (manual fallback only):** If the manual fallback applies and a model can be selected for this call, prefer a reasoning-optimized model — reasoning models excel at adversarial validation. This doesn't apply when delegating to a native review tool or subagent; they manage their own model selection.
 
 ### [BUILDER AGENT CONTEXT]
 
@@ -318,6 +317,11 @@ Before proceeding, verify:
 
 ## Tools
 
+### Critic Hand-off (in priority order)
+- **Native code review skill/tool** - Whatever dedicated code review capability the environment already exposes (e.g. a `/code-review`-style skill). Invoke it with the packaged context (diff, Spec, Constitution) and the dual-contract validation task from Step 4.
+- **Independent subagent** - Whatever agent-spawning primitive the environment exposes (e.g. a Task/Agent tool, a background agent). Spawn with only the packaged context as input, never the Builder's conversation.
+- **Manual fallback** - No dedicated tool: evaluate the Critic Agent prompt from Step 4 directly in the current session, and flag the loss of fresh-context isolation in the final report.
+
 ### MCP Tools (GitHub)
 - GitHub MCP tools - Verify GitHub MCP connection and retrieve PR/branch information
   - Use to validate GitHub MCP is configured and accessible
@@ -353,7 +357,7 @@ Before proceeding, verify:
   - `git log {BRANCH_NAME} ^main` - View commit history on branch
 
 ## Pre-flight Checklist
-- [ ] MCP status validation performed (GitHub MCP connection verified, see `mcp-status.md`)
+- [ ] MCP status validation performed (GitHub MCP connection verified)
 - [ ] PR ({PR_KEY}) or branch ({BRANCH_NAME}) is accessible and exists
 - [ ] {PR_KEY} normalized to numeric ID if PR review (extract from PR-12, #12, or 12)
 - [ ] Changed files retrieved and readable
@@ -380,28 +384,27 @@ Before proceeding, verify:
 ## Guidance
 
 ### Role
-Act as a **Builder Agent** responsible for orchestrating adversarial code review. You retrieve context, package information, and coordinate with the Critic Agent. You are systematic, thorough, and enforce the Review Gate pattern with dual-contract validation.
+Act as a **Builder Agent** responsible for orchestrating adversarial code review. You retrieve context, package information, and hand off to an independent Critic. You are systematic, thorough, and enforce the Review Gate pattern with dual-contract validation.
 
 ### Instruction
 Execute the adversarial review-code workflow to perform comprehensive code review with dual-contract validation. This includes:
 1. Retrieving PR/branch changes and understanding scope
 2. Determining feature domain and reading Spec (if exists)
 3. Reading Constitution (AGENTS.md Operational Boundaries)
-4. Packaging context for Critic Agent (no judgment at this stage)
-5. Invoking Critic Agent in fresh context session for validation
-6. Parsing Critic output and categorizing violations
+4. Packaging context for the Critic (no judgment at this stage)
+5. Handing off to an independent Critic — a native code review tool, an independently-spawned subagent, or a manual fallback if neither is available — for validation
+6. Parsing the Critic's output and categorizing violations
 7. Making gate decision (PASS/FAIL/WARNING) based on violation severity
 8. Generating structured review report with remediation paths
 
 ### Context
 - **Adversarial Code Review**: Builder/Critic separation prevents implementation bias
-- **Fresh Context Session**: Critic Agent has no knowledge of implementation, only contracts and code
+- **Independent Critic**: Prefer a native code review skill/tool, then an independently-spawned subagent with only the packaged context (no conversation history); fall back to manual in-session evaluation only when neither is available, and flag the loss of isolation in the report
 - **Dual-Contract Validation**: Functional (Spec) + Architectural (Constitution) validation
 - **Review Gate**: PASS/FAIL/WARNING decisions, not just suggestions
 - **Spec (if exists)**: Permanent living specification at `specs/{FEATURE_DOMAIN}/spec.md`
 - **Constitution**: AGENTS.md Operational Boundaries (3-tier system)
 - **Backward Compatible**: Works without Spec (Constitution-only validation)
-- **Model Routing**: Prefer reasoning models (o1, o3-mini) for Critic Agent if available
 - The review may be for a GitHub Pull Request ({PR_KEY}) or a local/remote branch ({BRANCH_NAME})
 - {PR_KEY} can be specified in multiple formats (PR-12, #12, or 12) and should be normalized to numeric ID
 - {BRANCH_NAME} follows `{type}/{TASK_KEY}` format for feature branches (consistent with other commands)
@@ -411,7 +414,7 @@ Execute the adversarial review-code workflow to perform comprehensive code revie
 
 ### Examples
 
-**ASDLC**: [Adversarial Code Review](asdlc://adversarial-code-review) and [Constitutional Review](asdlc://constitutional-review) — Critic Agent validates against Spec and Constitution in a fresh context.
+**ASDLC**: [Adversarial Code Review](asdlc://adversarial-code-review) and [Constitutional Review](asdlc://constitutional-review) — the Critic validates against Spec and Constitution independently of the Builder.
 
 **Example 1: Review Pull Request with Spec Validation**
 ```
@@ -422,8 +425,8 @@ Process:
 3. Determine feature domain from PR title/branch (e.g., "user-authentication")
 4. Read specs/user-authentication/spec.md (Blueprint + Contract)
 5. Read AGENTS.md Operational Boundaries
-6. Package context for Critic Agent
-7. Invoke Critic Agent in fresh context (dual-contract validation)
+6. Package context for the Critic
+7. Hand off to a native review tool, else an independent subagent, else manual fallback (dual-contract validation)
 8. Parse Critic output: Spec violations + Constitutional violations
 9. Make gate decision: FAIL if CRITICAL violations or Tier 3 violations
 10. Generate structured review report with remediation paths
@@ -438,8 +441,8 @@ Process:
 3. Get changed files using git diff --name-only
 4. Attempt to determine feature domain, no spec found
 5. Read AGENTS.md Operational Boundaries
-6. Package context for Critic Agent (Constitution only)
-7. Invoke Critic Agent for Constitutional validation
+6. Package context for the Critic (Constitution only)
+7. Hand off to a native review tool, else an independent subagent, else manual fallback (Constitutional validation)
 8. Parse Critic output: Constitutional violations only
 9. Make gate decision based on Constitutional violations
 10. Generate review report noting "No Spec - validated against Constitution only"
@@ -559,7 +562,7 @@ All formats result in pullNumber=12 for API calls
    - **Safety Limits**: Never commit secrets, API keys, or sensitive data in review reports
    - **AGENTS.md Optional**: If AGENTS.md exists, Constitutional validation is performed. If missing, validate against Spec only or perform minimal validation.
    - See AGENTS.md §3 Operational Boundaries (if present) for detailed standards
-2. **Fresh Context Requirement**: Critic Agent MUST use separate context session with no implementation bias. Builder Agent packages context, Critic Agent validates.
+2. **Independent Critic Requirement**: The Critic MUST be independent of the Builder's context, in priority order: native code review skill/tool, then an independently-spawned subagent given only the packaged context, then manual in-session fallback (report the loss of isolation when this applies). Builder Agent packages context; Critic validates.
 3. **Dual-Contract Validation**: Validate against BOTH Spec (if exists) and AGENTS.md Constitution. Never validate against only one when both are available.
 4. **Gate Decision Logic**:
    - FAIL on Spec CRITICAL violations OR Constitutional Tier 3 violations
@@ -567,14 +570,13 @@ All formats result in pullNumber=12 for API calls
    - PASS on Spec INFO violations OR Constitutional Tier 1 violations OR no violations
 5. **Structured Violation Reports**: Every violation MUST include: Description, Impact, Remediation, Location, Reference.
 6. **Backward Compatibility**: Works without Spec (Constitution-only validation). Never fail if Spec doesn't exist.
-7. **MCP Validation**: GitHub MCP connection is required. If validation fails, STOP and report the failure (see `mcp-status.md`).
+7. **MCP Validation**: GitHub MCP connection is required. If validation fails, STOP and report the failure.
 8. **{PR_KEY} Normalization**: Always normalize {PR_KEY} to numeric ID (extract from PR-12, #12, or 12 format) before making API calls.
-9. **Reasoning Model Preference**: Use reasoning-optimized model (o1, o3-mini) for Critic Agent if available. These models excel at adversarial validation.
-10. **No Implementation Bias**: Critic Agent must NOT have access to implementation history, discussions, or rationale. Only contracts and code.
+9. **Reasoning Model Preference (manual fallback only)**: If falling back to manual in-session evaluation and a model can be selected, prefer a reasoning-optimized model — these models excel at adversarial validation. Not applicable when delegating to a native tool or subagent.
+10. **No Implementation Bias**: The Critic must NOT have access to implementation history, discussions, or rationale — only contracts and code. This is guaranteed by construction when using a native tool or subagent (they receive only the packaged context); in the manual fallback, deliberately disregard implementation discussion when evaluating.
 11. **Actionable Remediation**: Every violation must include specific, ordered steps to fix. No vague suggestions like "improve code quality."
 
 **Existing Standards (Reference):**
-- MCP status validation: See `mcp-status.md` for detailed MCP server connection checks
 - Spec structure: See `specs/README.md` for Blueprint + Contract format
 - Constitution: See `AGENTS.md` Operational Boundaries for 3-tier system
 - Branch naming: Type prefix format (`{type}/{TASK_KEY}`) as shown in `start-task.md`

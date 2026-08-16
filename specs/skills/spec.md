@@ -54,7 +54,7 @@ This repo is built for **Cursor IDE**. The **skills** (Agent Skills format: mark
 **Scenario: User installs from path**
 - **Given:** Repo with `skills/` at root
 - **When:** User runs `cp -r skills/* ~/.cursor/skills/` and restarts Cursor
-- **Then:** `/start-task`, `/create-task`, etc. are available and run correctly
+- **Then:** `/start-task`, `/complete-task`, etc. are available and run correctly
 
 **Scenario: MkDocs build**
 - **Given:** All references updated to `skills/`

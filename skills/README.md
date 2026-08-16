@@ -20,7 +20,6 @@ See [Installation](../docs/getting-started.md#step-2-install-skills) in the docs
 ## Example Workflow
 
 ```bash
-/create-plan for TASK-123
 /start-task TASK-123
 /complete-task TASK-123
 ```

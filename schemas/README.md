@@ -51,10 +51,10 @@ The schema validates a *parsed* representation of the markdown: section presence
 2. **Run the validator** on a skill file (e.g. skills/<name>/SKILL.md):
 
    ```bash
-   python schemas/validate.py skills/create-plan/SKILL.md
+   python schemas/validate.py skills/start-task/SKILL.md
    ```
 
-   On success: `OK: skills/create-plan/SKILL.md validates against skill.schema.json`.
+   On success: `OK: skills/start-task/SKILL.md validates against skill.schema.json`.
    On failure: JSON Schema errors are printed and the process exits with code 1.
    For `skills/*/SKILL.md`, frontmatter is stripped and the body is validated.
 
@@ -85,7 +85,7 @@ The `jsonschema` library is in `requirements.txt`; the validator runs in the sam
 
 ## Valid and Invalid Examples
 
-- **Valid:** `skills/create-plan/SKILL.md` (body) — has all six sections, numbered steps, and MCP refs matching the pattern.
+- **Valid:** `skills/start-task/SKILL.md` (body) — has all six sections, numbered steps, and MCP refs matching the pattern.
 - **Invalid (would fail):**
   - Missing section (e.g. no `## Prerequisites`).
   - **Steps** with no `1.`, `2.`, etc.

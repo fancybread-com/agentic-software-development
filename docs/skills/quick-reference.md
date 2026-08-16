@@ -14,56 +14,15 @@ title: Quick Reference
 
 ```
 sdlc-workflow-skills/
-├── Product
-│   ├── /create-task
-│   └── /decompose-task
-│
-├── Planning
-│   ├── /refine-task
-│   └── /create-plan
-│
 ├── Development
 │   ├── /start-task
 │   └── /complete-task
 │
-├── Quality
-│   ├── /create-test
-│   └── /review-code
-│
-└── Utilities
-    ├── /mcp-status
-    └── /setup-asdlc
+└── Quality
+    └── /review-code
 ```
 
 ---
-
-## Product Management
-
-```bash
-# Create user story
-/create-task --type=story for [feature description]
-
-# Create epic from plan
-/create-task --type=epic from [plan-file.md]
-
-# Decompose large task into subtasks
-/decompose-task TASK-123
-
-# Create bug
-/create-task --type=bug [description]
-```
-
----
-
-## Planning
-
-```bash
-# Refine task for sprint planning
-/refine-task TASK-123
-
-# Design implementation
-/create-plan for TASK-123
-```
 
 ## Development
 
@@ -80,23 +39,8 @@ sdlc-workflow-skills/
 ## Quality
 
 ```bash
-# Write tests
-/create-test --type=unit for ClassName
-
 # Review code
 /review-code for PR #42
-```
-
----
-
-## Utilities
-
-```bash
-# Check MCP server status
-/mcp-status
-
-# Initialize repository for ASDLC
-/setup-asdlc
 ```
 
 ---
