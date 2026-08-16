@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Removed
 
-- **Skill set trimmed to match actual usage:** Removed `create-task`, `refine-task`, `decompose-task`, `mcp-status`, `setup-asdlc`, `create-test`, and `create-plan`. Only `start-task`, `complete-task`, and `review-code` remain. These skills were built for a Jira-driven task-tracking workflow that's no longer how the project is used; the audit at `.plans/skill-audit-2026-08-16.md` confirmed the removed skills were architecturally sound but unused in practice. `start-task`'s spec/plan prerequisite now also accepts clear acceptance criteria on the task as a fallback, since `/create-plan` no longer exists to create one.
+- **Skill set trimmed to match actual usage:** Removed `create-task`, `refine-task`, `decompose-task`, `mcp-status`, `setup-asdlc`, `create-test`, and `create-plan`. Only `start-task`, `complete-task`, and `review-code` remain. These skills were built for a Jira-driven task-tracking workflow that's no longer how the project is used. `start-task`'s spec/plan prerequisite now also accepts clear acceptance criteria on the task as a fallback, since `/create-plan` no longer exists to create one.
 
 ## [2.1.0] - 2026-02-14
 
