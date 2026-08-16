@@ -8,9 +8,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-08-16
+
+### Added
+
+- **Skill audit tooling:** New `audit-skills` project skill performs a read-only ASDLC-alignment and Agent Skills format audit across `skills/`, producing a report in `.plans/` (FB-74).
+- **Reference docs:** New Agent Skills and skills.sh reference pages under `docs/reference/` (FB-73).
+
+### Changed
+
+- **Org rename:** Repository and install references moved from `fancybread-com` to `fancy-bread`; install docs now prefer `npx skills install` over the Cursor GitHub remote-rule option (FB-72).
+- **`review-code` Critic hand-off:** No longer simulates a "fresh Critic session" within the same conversation. Now hands off to an independent Critic in priority order: a native code review skill/tool if the environment has one, else an independently-spawned subagent given only the packaged context, else a manual fallback that flags the loss of fresh-context isolation in the report.
+- **Project skills relocated:** `audit-skills`, `create-release`, and `prepare-changelog` moved from `.cursor/skills/` to `.claude/skills/` so they're natively invocable from Claude Code (previously Cursor-only).
+
 ### Removed
 
 - **Skill set trimmed to match actual usage:** Removed `create-task`, `refine-task`, `decompose-task`, `mcp-status`, `setup-asdlc`, `create-test`, and `create-plan`. Only `start-task`, `complete-task`, and `review-code` remain. These skills were built for a Jira-driven task-tracking workflow that's no longer how the project is used. `start-task`'s spec/plan prerequisite now also accepts clear acceptance criteria on the task as a fallback, since `/create-plan` no longer exists to create one.
+- **Azure DevOps support:** Dropped as a supported MCP combination across docs, the architecture diagram, `mcps/`, and the tool validator. GitHub + Jira is now the only supported combination.
 
 ## [2.1.0] - 2026-02-14
 
@@ -54,7 +68,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
-[Unreleased]: https://github.com/fancy-bread/sdlc-workflow-skills/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/fancy-bread/sdlc-workflow-skills/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/fancy-bread/sdlc-workflow-skills/releases/tag/v3.0.0
 [2.1.0]: https://github.com/fancy-bread/sdlc-workflow-skills/releases/tag/v2.1.0
 [2.0.0]: https://github.com/fancy-bread/sdlc-workflow-skills/releases/tag/v2.0.0
 [1.1.5]: https://github.com/fancy-bread/sdlc-workflow-skills/releases/tag/v1.1.5
