@@ -168,7 +168,6 @@ Begin development on a task with proper setup and pre-flight checks.
 
 ## Related Commands
 
-**Before:** [`/create-plan`](create-plan.md) - Create plan first
 **After:** [`/complete-task`](complete-task.md) - Finish and create PR
 
 ---

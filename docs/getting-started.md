@@ -7,18 +7,16 @@ title: Getting Started
 ## Prerequisites
 
 - **Agent Skills–compatible environment** (e.g. [Cursor IDE](https://cursor.com))
-- **Jira or Azure DevOps** – Active account with API access
+- **Jira** – Active account with API access
 - **GitHub** – Account with personal access token
 
 ---
 
 ## Step 1: Configure MCP
 
-**MCP combinations:**
-- **GitHub + Jira** — GitHub for repos/PRs, Jira for issue tracking
-- **ADO only** — Azure DevOps provides both repo management and issue tracking
+**MCP combination:** GitHub + Jira — GitHub for repos/PRs, Jira for issue tracking.
 
-[Full MCP setup →](reference/mcp-setup.md) (Option A or B).
+[Full MCP setup →](reference/mcp-setup.md).
 
 Open your environment’s MCP settings (e.g. **Cursor:** Settings → Features → Model Context Protocol) and add:
 
@@ -86,7 +84,7 @@ For other agents or global install, see [vercel-labs/skills](https://github.com/
 
 The same layout works for all three: a top-level **`skills/`** directory; each skill is a subfolder containing **`SKILL.md`** with YAML frontmatter **`name`** (matching the folder name) and **`description`**. See [Cursor: Agent Skills](https://cursor.com/docs/context/skills#skillmd-file-format), [agentskills.io](https://agentskills.io), and [skills.sh](https://skills.sh).
 
-To verify the install: open your agent chat and type `/`—you should see the SDLC commands (e.g. `/create-task`, `/start-task`). Or run `/mcp-status` to confirm MCP connections.
+To verify the install: open your agent chat and type `/`—you should see the SDLC commands (e.g. `/start-task`, `/complete-task`).
 
 ### Option B: Download release and copy
 
@@ -108,15 +106,14 @@ Skills live in **`skills/`** (in the repo or in the release archive). Copy them 
 Open your agent chat (e.g. **Cursor:** `Cmd/Ctrl + L`) and run:
 
 ```
-/create-task --type=story for user profile page with avatar upload
+/start-task PROJ-123
 ```
 
 AI will:
 
 1. Read the command instruction
-2. Connect to Jira via MCP
-3. Create story with title, acceptance criteria, and labels
-4. Return story ID (e.g., `PROJ-123`)
+2. Verify MCP connections and check for a spec, plan, or acceptance criteria
+3. Create the feature branch and begin implementation
 
 **That's it!** You're using agentic skills.
 
@@ -125,9 +122,6 @@ AI will:
 ## Try a Development Workflow
 
 ```bash
-# Plan
-/create-plan for PROJ-123
-
 # Build
 /start-task PROJ-123
 

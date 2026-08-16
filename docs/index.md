@@ -76,7 +76,7 @@ hide:
 
 <div class="hero">
   <h1>SDLC Workflow Skills</h1>
-  <p>Skills that implement ASDLC workflows. Works in any Agent Skills–compatible environment (Claude, Codex, Cursor, etc.) with MCP tools for Jira, Azure DevOps, GitHub and more.</p>
+  <p>Skills that implement ASDLC workflows. Works in any Agent Skills–compatible environment (Claude, Codex, Cursor, etc.) with MCP tools for Jira, GitHub and more.</p>
   <p>
     <a href="getting-started/" class="md-button md-button--primary">Get Started</a>
     <a href="skills/" class="md-button">View Skills</a>
@@ -93,7 +93,7 @@ SDLC Workflow Skills provides skills in Agent Skills format that implement ASDLC
 **Built on:**
 
 - **Agent Skills** – Markdown instructions with frontmatter (Cursor and other compatible environments)
-- **MCP (Model Context Protocol)** – Connects to Jira, Azure DevOps, GitHub
+- **MCP (Model Context Protocol)** – Connects to Jira, GitHub
 - **ASDLC** – Principles for industrial-grade agentic software development
 
 ---
@@ -105,7 +105,6 @@ graph LR
     A[You] -->|/skill| B[AI Agent]
     B -->|invokes| C[MCP Tools]
     C --> D[Jira]
-    C --> E[Azure DevOps]
     C --> F[GitHub]
     C --> G[Filesystem]
 
@@ -117,7 +116,6 @@ graph LR
 2. **Your AI agent reads the skill** (markdown instruction file)
 3. **AI invokes MCP tools** to interact with:
    - **Jira** - Issue tracking and project management
-   - **Azure DevOps** - Work items and boards
    - **GitHub** - Repository and pull requests
    - **Filesystem** - Plans and code
 4. **AI executes contextually** based on your project
@@ -134,7 +132,7 @@ graph LR
 
 ### 1. Setup MCP Connections
 
-Connect your IDE or agent to your services (Jira, Azure DevOps, GitHub, filesystem). In Cursor: Settings → Features → Model Context Protocol.
+Connect your IDE or agent to your services (Jira, GitHub, filesystem). In Cursor: Settings → Features → Model Context Protocol.
 
 ### 2. Install Skills
 
@@ -142,7 +140,7 @@ Recommended: `npx skills add fancy-bread/sdlc-workflow-skills -a cursor` (choose
 
 ### 3. Start Using
 
-Invoke your first skill: `/create-task --type=story for [your feature]`
+Invoke your first skill: `/start-task PROJ-123`
 
 [:octicons-arrow-right-24: Full Setup Guide](getting-started.md){ .md-button .md-button--primary }
 

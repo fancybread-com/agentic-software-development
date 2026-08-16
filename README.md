@@ -17,7 +17,7 @@ Built on ASDLC principles: Factory Architecture (specialized command stations), 
 
 **Built on:**
 - **Agent Skills** – Markdown instructions with frontmatter (supported by Cursor and other Agent Skills–compatible environments)
-- **MCP** – Jira, Azure DevOps, GitHub
+- **MCP** – Jira, GitHub
 - **Cursor IDE** – Primary tested environment; others may work where the format is supported
 
 ---
@@ -72,8 +72,6 @@ Choose **Copy** when prompted (symlinks can prevent Cursor from listing skills).
 ### 3. Use Skills (slash commands)
 
 ```
-/create-task --type=story for user authentication
-/create-plan for PROJ-123
 /start-task PROJ-123
 /complete-task PROJ-123
 ```
@@ -84,11 +82,8 @@ Choose **Copy** when prompted (symlinks can prevent Cursor from listing skills).
 
 ## Available Skills
 
-- **Product (2):** `/create-task`, `/decompose-task`
-- **Planning (2):** `/refine-task`, `/create-plan`
 - **Development (2):** `/start-task`, `/complete-task`
-- **Quality (2):** `/create-test`, `/review-code`
-- **Utilities (2):** `/mcp-status`, `/setup-asdlc`
+- **Quality (1):** `/review-code`
 
 [View all skills →](https://fancy-bread.github.io/sdlc-workflow-skills/skills/)
 
@@ -108,7 +103,7 @@ Skills connect you to AI agents that interact with Jira, GitHub, and your codeba
 
 - [Getting Started](https://fancy-bread.github.io/sdlc-workflow-skills/getting-started/) — 3-step setup
 - [Skills Reference](https://fancy-bread.github.io/sdlc-workflow-skills/skills/) — All skills
-- [MCP Setup](https://fancy-bread.github.io/sdlc-workflow-skills/reference/mcp-setup/) — Configure GitHub, Jira, ADO
+- [MCP Setup](https://fancy-bread.github.io/sdlc-workflow-skills/reference/mcp-setup/) — Configure GitHub, Jira
 - [Methodology](https://fancy-bread.github.io/sdlc-workflow-skills/getting-started/#how-it-works) — Core principles
 
 ---
@@ -116,7 +111,7 @@ Skills connect you to AI agents that interact with Jira, GitHub, and your codeba
 ## Requirements
 
 - **Agent Skills–compatible environment** (e.g. [Cursor IDE](https://cursor.com))
-- **Jira or Azure DevOps** – Issue tracking (Jira uses OAuth on first use)
+- **Jira** – Issue tracking (uses OAuth on first use)
 - **GitHub** – Version control
 - **GitHub token** – For MCP (scopes: `repo`, `read:org`)
 

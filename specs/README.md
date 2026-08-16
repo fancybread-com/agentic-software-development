@@ -207,10 +207,8 @@ Specs are **source code for agents** — they define the contract that code impl
 4. **Review in PRs**: Verify specs are updated when contracts change
 
 **Commands that use specs:**
-- `/create-plan {TASK_KEY}` — Generates spec for a feature
 - `/start-task {TASK_KEY}` — Reads spec's Blueprint for design constraints
 - `/complete-task {TASK_KEY}` — References spec's Contract in PR description
-- `/create-test {COMPONENT}` — Uses spec's Contract scenarios for test generation
 - `/review-code {PR}` — Validates code against spec contracts
 
 ---

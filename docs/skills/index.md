@@ -12,25 +12,6 @@ The canonical skill definitions live in **`skills/`** (each skill is `skills/<na
 
 ---
 
-## Product
-
-| Command | What It Does |
-|---------|--------------|
-| **[`/create-task`](create-task.md)** | Create tasks with specified type (epic, story, bug, task, etc.) |
-| **[`/decompose-task`](decompose-task.md)** | Decompose large tasks into well-defined subtasks |
-
-
----
-
-## Planning
-
-| Command | What It Does |
-|---------|--------------|
-| **[`/refine-task`](refine-task.md)** | Refine tasks to meet Definition of Ready with clear acceptance criteria |
-| **[`/create-plan`](create-plan.md)** | Create technical implementation design |
-
----
-
 ## Development
 
 | Command | What It Does |
@@ -44,17 +25,7 @@ The canonical skill definitions live in **`skills/`** (each skill is `skills/<na
 
 | Command | What It Does |
 |---------|--------------|
-| **[`/create-test`](create-test.md)** | Generate unit tests (adapts for backend/frontend) |
 | **[`/review-code`](review-code.md)** | AI-assisted code review |
-
----
-
-## Utilities
-
-| Command | What It Does |
-|---------|--------------|
-| **[`/mcp-status`](mcp-status.md)** | Check MCP server authentication status |
-| **[`/setup-asdlc`](setup-asdlc.md)** | Initialize repository for ASDLC adoption |
 
 ---
 

@@ -22,14 +22,12 @@ Before proceeding, verify (see Steps 1–2 for how):
 
 1. **MCP Status Validation**: All required MCP servers connected and authorized. If any fail, STOP.
    - **MCP Tool Usage Standards**: MCP tool usage should follow best practices (check schema files, validate parameters, handle errors gracefully). These standards are documented in AGENTS.md §3 Operational Boundaries if AGENTS.md exists, but apply universally regardless.
-2. **Spec or Plan exists**: At least one of `specs/{FEATURE_DOMAIN}/spec.md` or `.plans/{TASK_KEY}-*.plan.md`. If neither, STOP and suggest `/create-plan {TASK_KEY}`.
+2. **Spec, Plan, or acceptance criteria exists**: At least one of `specs/{FEATURE_DOMAIN}/spec.md`, `.plans/{TASK_KEY}-*.plan.md`, or clear acceptance criteria on the task itself. If none of these exist, STOP and report that the task lacks enough context to start work.
 3. **Story in In Progress** (or can be transitioned) and **assigned to current user**.
 
 ## Steps
 1. **Pre-flight checks**
-   - **MCP Status Validation**: Perform MCP server status checks (see `mcp-status.md` for detailed steps)
-     - Test each configured MCP server connection
-     - Verify all required integrations are authorized and operational
+   - **MCP Status Validation**: Test each configured MCP server connection (issue tracker, GitHub) and verify all required integrations are authorized and operational
      - **If any MCP server fails validation, STOP and report the failure. Do not proceed.**
    - **Read relevant documents:**
      - **First, check for Spec**: Look for related spec in `specs/{FEATURE_DOMAIN}/spec.md`
@@ -42,7 +40,7 @@ Before proceeding, verify (see Steps 1–2 for how):
          - If modification time cannot be determined, use the first file found alphabetically
          - Report which file was selected: "Using plan file: {filename}"
        - Plans provide transient task-level implementation steps
-       - **If no plan and no spec exist, STOP and report error**: "No plan or spec found for {TASK_KEY}. Run `/create-plan {TASK_KEY}` first."
+       - **If no plan and no spec exist**: Check the task's own description/acceptance criteria. If clear acceptance criteria are present, proceed on that basis. **If none of spec, plan, or acceptance criteria exist, STOP and report error**: "No plan, spec, or acceptance criteria found for {TASK_KEY}. Add acceptance criteria to the task or create a spec/plan before starting."
    - Verify story is in "In Progress"
      - Fetch story status using `mcp_atlassian_getJiraIssue`
      - **If status is NOT "In Progress":**
@@ -158,7 +156,7 @@ Before proceeding, verify (see Steps 1–2 for how):
   - Note: Committing changes is handled in `/complete-task`, not in this command
 
 ## Pre-flight Checklist
-- [ ] MCP status validation performed (see `mcp-status.md`)
+- [ ] MCP status validation performed
 - [ ] All MCP servers connected and authorized
 - [ ] Relevant docs checked (spec and/or plan)
 - [ ] Spec read (if exists) - Blueprint and Contract sections
@@ -195,7 +193,7 @@ Execute the start-task workflow to begin development on a specified task. This i
 4. Following all established conventions and standards
 
 ### Context
-- The task is tracked in an issue management system (Jira, Azure DevOps, etc.)
+- The task is tracked in an issue management system (Jira, etc.)
 - **Specs** may exist at `specs/{FEATURE_DOMAIN}/spec.md` with permanent feature contracts
 - **Plans** may exist at `.plans/{TASK_KEY}-*.plan.md` with transient task-level implementation steps
 - Specs define State (how feature works), Plans define Delta (what changes)
@@ -255,8 +253,8 @@ Note: The branch name in the comment must match the actual branch name created (
    - Example: Story FB-6 → `feat/FB-6` (short format, not descriptive format)
    - **Important**: Be consistent - use short format for all branches
 8. **Pre-flight Validation**: Do not proceed if:
-   - **MCP status validation fails** (see `mcp-status.md` for validation steps - if any MCP server is not connected or authorized, STOP immediately)
-   - Neither spec nor plan exists (STOP and suggest running `/create-plan {TASK_KEY}` first)
+   - **MCP status validation fails** (if any MCP server is not connected or authorized, STOP immediately)
+   - None of spec, plan, or clear acceptance criteria exist (STOP and report that the task lacks enough context to start)
    - Story is not in "In Progress" status
    - Story is not assigned to current user
 9. **Code Quality**:
@@ -265,7 +263,6 @@ Note: The branch name in the comment must match the actual branch name created (
 10. **Documentation**: Update relevant documentation when adding features or changing behavior
 
 **Existing Standards (Reference):**
-- MCP status validation: See `mcp-status.md` for detailed MCP server connection checks
 - Spec guidance: See `specs/README.md` for when to update specs and Same-Commit Rule
 - Branch naming: Type prefix format (`{type}/{TASK_KEY}`) as shown in current workflow
 - Test requirements: Tests written alongside code (per Implementation Checklist)

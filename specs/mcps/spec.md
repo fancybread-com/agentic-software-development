@@ -19,7 +19,7 @@ Commands reference MCP tools (e.g. `mcp_atlassian_getJiraIssue`, `mcp_github_lis
 ### Architecture
 
 - **Layout:** `mcps/<server>/tools/<tool>.json`
-  - `<server>`: MCP server id as in the `mcp_` prefix (e.g. `atlassian`, `github`, `asdlc`, `ado`). Align with Cursor MCP config and `mcp_Server_Tool` tokens in commands. **MCP combinations:** GitHub+Jira or GitHub+ADO (issue tracker); ASDLC optional.
+  - `<server>`: MCP server id as in the `mcp_` prefix (e.g. `atlassian`, `github`, `asdlc`). Align with Cursor MCP config and `mcp_Server_Tool` tokens in commands. **MCP combination:** GitHub+Jira (issue tracker); ASDLC optional.
   - `<tool>`: Tool name segment (e.g. `getJiraIssue`, `list_commits`). Filename `getJiraIssue.json`; `name` inside JSON may be the tool id or the full `mcp_Server_Tool` depending on resolver needs.
 - **Schema:** Each `mcps/<server>/tools/*.json` must validate against `schemas/mcp-tool.schema.json` (required: `name`, `inputSchema`; optional: `description`, `title`, `outputSchema`, `annotations`).
 - **Resolve rule:** `mcp_Server_Tool` → `mcps/Server/tools/Tool.json`. Resolver normalizes the ref, finds the file, and (optionally) validates the file against `mcp-tool.schema.json`.
@@ -33,7 +33,7 @@ Commands reference MCP tools (e.g. `mcp_atlassian_getJiraIssue`, `mcp_github_lis
 - **Don’t use a tool file that fails `mcp-tool.schema.json`** — validators and CI must be able to assume conformance.
 - **Don’t hardcode server or tool names in validators** — derive from `mcp_Server_Tool` and path conventions.
 - **Don’t skip `mcps/README.md`** — it documents the layout, the schema, and how to add or update tools.
-- **Don’t add a tool to `mcps/` unless it is referenced in `skills/*/SKILL.md` or `skills/mcp-status/SKILL.md`** — we curate for tool limits. With multiple MCP servers, developers can hit IDE caps; only tools used by skills or mcp-status belong in the list of record.
+- **Don’t add a tool to `mcps/` unless it is referenced in `skills/*/SKILL.md`** — we curate for tool limits. With multiple MCP servers, developers can hit IDE caps; only tools used by skills belong in the list of record.
 
 ---
 
@@ -41,7 +41,7 @@ Commands reference MCP tools (e.g. `mcp_atlassian_getJiraIssue`, `mcp_github_lis
 
 ### Definition of Done
 
-- [ ] `mcps/` exists with `mcps/<server>/tools/` for each MCP server we validate (Atlassian, GitHub, ASDLC, ADO as a minimum).
+- [ ] `mcps/` exists with `mcps/<server>/tools/` for each MCP server we validate (Atlassian, GitHub, ASDLC as a minimum).
 - [ ] Every `mcps/<server>/tools/*.json` validates against `schemas/mcp-tool.schema.json`.
 - [ ] `mcps/README.md` documents layout, `schemas/mcp-tool.schema.json`, how to add/update tool files, and how validators use mcps/.
 - [ ] At least one script or validator can resolve `mcp_Server_ToolName` to a file in `mcps/<server>/tools/` and verify that file against `mcp-tool.schema.json`.

@@ -14,7 +14,7 @@ Perform adversarial AI-assisted code review on a pull request or branch using Bu
 
 ## What It Does
 
-Builder gathers diff, changed files, Spec (if exists), and AGENTS.md Constitution. A fresh Critic session evaluates against both; produces a PASS/FAIL/WARNING report with violations, impact, and remediation.
+Builder gathers diff, changed files, Spec (if exists), and AGENTS.md Constitution, then hands off to an independent Critic — a native code review tool if the environment has one, otherwise an independently-spawned subagent, otherwise a manual fallback — which evaluates against both and produces a PASS/FAIL/WARNING report with violations, impact, and remediation.
 
 ---
 
@@ -51,7 +51,7 @@ AI (Critic): Validating against Spec Contract and Constitution...
 ## At a glance
 
 - **Prerequisites:** GitHub MCP; PR ({PR_KEY}) or branch ({BRANCH_NAME}) exists and is readable.
-- **Steps:** Builder: get diff and files → resolve feature domain → read Spec (if any) and Constitution → Critic in a fresh context: validate against Spec + Constitution → output structured report (PASS/FAIL/WARNING).
+- **Steps:** Builder: get diff and files → resolve feature domain → read Spec (if any) and Constitution → hand off to an independent Critic (native tool, else subagent, else manual fallback): validate against Spec + Constitution → output structured report (PASS/FAIL/WARNING).
 
 ---
 

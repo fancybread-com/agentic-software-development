@@ -3,7 +3,7 @@
 Validates a skill markdown file (e.g. skills/<name>/SKILL.md body) against schemas/skill.schema.json.
 
 Usage: python schemas/validate.py <path>
-Example: python schemas/validate.py skills/create-plan/SKILL.md
+Example: python schemas/validate.py skills/start-task/SKILL.md
 
 Supports:
 - skills/<name>/SKILL.md — strips YAML frontmatter (--- ... ---), validates body
@@ -70,7 +70,7 @@ def strip_frontmatter(md: str) -> str:
 
 
 def main() -> None:
-    md_path = sys.argv[1] if len(sys.argv) > 1 else "skills/create-plan/SKILL.md"
+    md_path = sys.argv[1] if len(sys.argv) > 1 else "skills/start-task/SKILL.md"
     schema_path = Path(__file__).parent / "skill.schema.json"
 
     if not Path(md_path).exists():
