@@ -99,7 +99,7 @@ Documentation **MUST**:
 | **Complete Work** | `/complete-task <TASK-ID>` | Commit, push, Constitutional Review, create PR. Link to story |
 | **Review Code** | `/review-code for PR #<number>` | Adversarial code review with dual-contract validation (Spec + Constitution). Acts as Review Gate |
 
-**Workflow:** `/start-task` → `/complete-task` → `/review-code`. **Project skills** (in `.cursor/skills/`, versioned in repo, not in docs): e.g. `/audit-skills`, prepare-changelog, create-release.
+**Workflow:** `/start-task` → `/complete-task` → `/review-code`. **Project skills** (in `.claude/skills/`, versioned in repo, not in docs): e.g. `/audit-skills`, prepare-changelog, create-release.
 
 ---
 

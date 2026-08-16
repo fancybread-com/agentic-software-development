@@ -63,7 +63,7 @@ For each skill, perform structured analysis:
 - **Inputs**: This spec (`specs/skill-audit/spec.md`), `AGENTS.md`, and all `skills/*/SKILL.md`.
 - **Steps**: For each skill in `skills/`: apply Audit Methodology (Purpose & Phase, Artifact Analysis, Pattern Implementation, Field Manual Alignment, Gap Identification, Recommendation). Also validate Agent Skills format (Overview, Definitions, Prerequisites, Steps, Tools, Guidance; frontmatter). Aggregate findings.
 - **Output**: One markdown report per run, written to `.plans/` (e.g. `.plans/skill-audit-YYYY-MM-DD.md`). Report structure: Executive Summary, Skill-by-Skill Analysis, Gap Analysis, Skill-to-ASDLC Mapping, Recommendations, Next Steps. The skill **does not edit** any file in `skills/`.
-- **Placement**: Project skill in `.cursor/skills/audit-skills/` (project-local; same as prepare-changelog). Not in `skills/` and not in docs.
+- **Placement**: Project skill in `.claude/skills/audit-skills/` (project-local; same as prepare-changelog). Not in `skills/` and not in docs.
 
 ### Anti-Patterns
 
