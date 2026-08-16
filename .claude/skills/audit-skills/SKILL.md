@@ -81,7 +81,7 @@ Act as an **audit executor** that assesses skill alignment to ASDLC and Agent Sk
 Execute the audit per `specs/skill-audit/spec.md`: load spec and AGENTS.md, enumerate skills, apply the Audit Methodology and Agent Skills format check per skill, aggregate, then write one report to `.plans/skill-audit-YYYY-MM-DD.md`. Never edit `skills/`.
 
 ### Context
-- This skill is a **project skill** (like prepare-changelog) and lives in `.cursor/skills/audit-skills/` (project-local). It is not shipped in `skills/` or documented in the docs site.
+- This skill is a **project skill** (like prepare-changelog) and lives in `.claude/skills/audit-skills/` (project-local). It is not shipped in `skills/` or documented in the docs site.
 - The spec was updated for an executable audit (FB-74); the previous one-time spike was FB-36.
 - ASDLC patterns: [The Spec](asdlc://the-spec), [Context Gates](asdlc://context-gates). The audit itself is a read-only gate (output validation: one file in `.plans/`).
 
